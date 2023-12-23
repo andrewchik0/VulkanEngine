@@ -1,0 +1,50 @@
+#pragma once
+
+#include <glm/glm.hpp>
+
+#include "spherical_vec.h"
+
+namespace VKEngine::math {
+  
+  inline glm::vec3 getNormalizedProjection(glm::vec3 v)
+  {
+    return glm::normalize(glm::vec3(v.x, 0.0, v.z));
+  }
+  
+  inline float max(float a, float b)
+  {
+    return a > b ? a : b;
+  }
+  
+  inline float min(float a, float b)
+  {
+    return a > b ? b : a;
+  }
+  
+  inline float clamp(float v, float min, float max)
+  {
+    return v < min ?
+    min :
+    v > max ?
+    max :
+    v;
+  }
+  
+  inline int32_t sign(float x)
+  {
+    return x > 0 ? 1 : -1;
+  }
+  
+  inline float lerp(float a, float b, float t)
+  {
+    return a * (1 - t) + b * t;
+  }
+  
+  inline float cos_interp(float a, float b, float t)
+  {
+    t = 1 - t;
+    t = cos(t * PI) / 2.0 + 1;
+    return a * (1 - t) + b * t;
+  }
+  
+}

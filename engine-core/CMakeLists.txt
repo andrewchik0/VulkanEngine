@@ -31,7 +31,7 @@ target_precompile_headers(${ENGINE_CORE} PUBLIC
 # Link and include external dependencies
 #
 
-target_include_directories(${ENGINE_CORE} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/third_party/)
+target_include_directories(${ENGINE_CORE} SYSTEM PUBLIC ${CMAKE_CURRENT_LIST_DIR}/third_party/)
 
 # Add glm git submodule
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/third_party/glm)

@@ -1,9 +1,5 @@
 #define VMA_IMPLEMENTATION
-// Discard compiler warnings
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
-#include "vk_mem_alloc/vk_mem_alloc.h"
-#pragma clang diagnostic pop
+#include <vk_mem_alloc/vk_mem_alloc.h>
 
 #include "vulkan.h"
 #include "../engine.h"

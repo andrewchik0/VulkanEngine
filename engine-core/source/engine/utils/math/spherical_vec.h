@@ -14,14 +14,14 @@ namespace VKEngine::math {
   public:
     float theta, phi, radius;
     
-    sph_vec3() : theta(0.0), phi(0.0), radius(0.0) {}
+    sph_vec3() : theta(0.0f), phi(0.0f), radius(0.0f) {}
     sph_vec3(glm::vec3 v)
     {
       radius = glm::length(v);
       theta = acos(v.z / radius);
       if (v.x == 0)
       {
-        phi = (PI / 2.0) * ((v.y > 0) * 2 - 1);
+        phi = (PI / 2.0f) * ((v.y > 0) * 2 - 1);
         return;
       }
       phi = v.x > 0 ? atan(v.y / v.x) :

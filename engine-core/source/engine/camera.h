@@ -20,11 +20,11 @@ namespace VKEngine {
     }
   public:
     Camera() :
-    _pos(0, 0, 0),
-    _lookAt(1, 0, 0),
-    _up(0, -1.0, 0),
+    _pos(0.0f),
+    _lookAt(1.0f, 0.0f, 0.0f),
+    _up(0.0f, -1.0f, 0.0f),
     _width(16), _height(9),
-    _fov(80.0), _near(0.1), _far(1000.0)
+    _fov(80.0f), _near(0.1f), _far(1000.0f)
     {
       recalculate();
     }
@@ -70,7 +70,7 @@ namespace VKEngine {
       
       glm::vec3 checkLookAt = glm::normalize(rotateY * glm::vec4(_lookAt, 1.0));
       float angleCos = (glm::dot(checkLookAt, math::getNormalizedProjection(_lookAt)));
-      float threeshold = 1e-4;
+      float threeshold = 1e-4f;
       
       if (angleCos <= 0)
       {

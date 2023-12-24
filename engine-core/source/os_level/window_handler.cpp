@@ -65,8 +65,8 @@ namespace VKEngine {
         }
       }
       
-      if (_isCursorHided && !(SDL_GetWindowFlags(_window) & SDL_WINDOW_MINIMIZED))
-        ;// SDL_WarpMouseInWindow(_window, _windowExtent.width / 2, _windowExtent.height / 2);
+      // if (_isCursorHided && !(SDL_GetWindowFlags(_window) & SDL_WINDOW_MINIMIZED))
+      //   SDL_WarpMouseInWindow(_window, _windowExtent.width / 2, _windowExtent.height / 2);
       
 #ifndef DEBUG
       if (SDL_GetWindowFlags(_window) & SDL_WINDOW_MINIMIZED)

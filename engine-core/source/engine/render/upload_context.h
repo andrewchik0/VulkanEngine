@@ -7,12 +7,14 @@ namespace VKEngine {
   
   class UploadContext {
   private:
-    VkState* _vkState;
+    VkState* _vkState = nullptr;
     
   public:
-    VkFence _uploadFence;
-    VkCommandPool _commandPool;
-    VkCommandBuffer _commandBuffer;
+    VkFence _uploadFence{ VK_NULL_HANDLE };
+    VkCommandPool _commandPool{ VK_NULL_HANDLE };
+    VkCommandBuffer _commandBuffer{ VK_NULL_HANDLE };
+
+    UploadContext() {}
     
     void init(VkState *state);
     void destroy();

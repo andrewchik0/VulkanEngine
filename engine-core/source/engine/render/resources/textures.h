@@ -6,11 +6,11 @@ namespace VKEngine {
   
   struct Texture : public IResource
   {
-    VkDescriptorSet descriptorsSet;
-    VkImage image;
-    VmaAllocation allocation;
-    VkImageView imageView;
-    VkSampler blockySampler;
+    VkDescriptorSet descriptorsSet{ VK_NULL_HANDLE };
+    VkImage image{ VK_NULL_HANDLE };
+    VmaAllocation allocation{ VK_NULL_HANDLE };
+    VkImageView imageView{ VK_NULL_HANDLE };
+    VkSampler blockySampler{ VK_NULL_HANDLE };
     
     void destroy(Render *render) override;
   };

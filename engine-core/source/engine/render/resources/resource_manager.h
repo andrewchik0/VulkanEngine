@@ -14,7 +14,7 @@ namespace VKEngine {
   protected:
     static_assert(std::is_base_of<IResource, Val>::value, "Val must be derived from IResource");
     
-    Render* _render;
+    Render* _render = nullptr;
     
     std::unordered_map<Key, Val> _resources;
     

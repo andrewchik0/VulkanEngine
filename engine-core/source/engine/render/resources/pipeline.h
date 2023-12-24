@@ -50,8 +50,8 @@ namespace VKEngine {
   
   struct Pipeline : public IResource
   {
-    VkPipeline pipeline;
-    VkPipelineLayout layout;
+    VkPipeline pipeline{ VK_NULL_HANDLE };
+    VkPipelineLayout layout{ VK_NULL_HANDLE };
     std::vector<ShaderData> shaderData;
     
     Pipeline() {}

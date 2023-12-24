@@ -3,12 +3,7 @@
 #include "pch.h"
 
 #include <vulkan/vulkan.h>
-
-// Discard compiler warnings
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
-#include "vk_mem_alloc/vk_mem_alloc.h"
-#pragma clang diagnostic pop
+#include <vk_mem_alloc/vk_mem_alloc.h>
 
 #ifdef DEBUG
   #define VK_CHECK(x)                                               \
@@ -30,9 +25,10 @@
 #endif // DEBUG
 
 namespace VKEngine {
-  
+
+  struct VkState;
+
   class Engine;
-  class VkState;
   class Render;
   
   struct AllocatedBuffer

@@ -19,8 +19,8 @@ namespace VKEngine {
     
     Utils::FunctionQueue frameDeletionQueue;
     
-    VkCommandPool commandPool;
-    VkCommandBuffer mainCommandBuffer;
+    VkCommandPool commandPool{ VK_NULL_HANDLE };
+    VkCommandBuffer mainCommandBuffer{ VK_NULL_HANDLE };
     
     DescriptorSets descriptorSets;
   };
@@ -32,7 +32,7 @@ namespace VKEngine {
     SwapchainHandler* _swapchainHandler;
     RenderPasses *_renderPasses;
     
-    const uint32_t _timeout = 1e9;
+    const uint32_t _timeout = (uint32_t)1e9;
     FrameData _frames[FRAME_OVERLAP];
     uint64_t _frameNumber{0};
     

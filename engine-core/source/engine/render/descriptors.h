@@ -42,11 +42,11 @@ namespace VKEngine {
     };
     
   public:
-    VkDescriptorPool _descriptorPool;
-    VkDescriptorSetLayout _globalLayout;
-    VkDescriptorSetLayout _cameraLayout;
-    VkDescriptorSetLayout _objectLayout;
-    VkDescriptorSetLayout _textureLayout;
+    VkDescriptorPool _descriptorPool{ VK_NULL_HANDLE };
+    VkDescriptorSetLayout _globalLayout{ VK_NULL_HANDLE };
+    VkDescriptorSetLayout _cameraLayout{ VK_NULL_HANDLE };
+    VkDescriptorSetLayout _objectLayout{ VK_NULL_HANDLE };
+    VkDescriptorSetLayout _textureLayout{ VK_NULL_HANDLE };
     
     void init(VkState* state, Frames* frames);
     void destroy();

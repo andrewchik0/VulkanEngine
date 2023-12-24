@@ -18,11 +18,11 @@ namespace VKEngine {
     static float t = 0.0f;
     const float animationTime = .2f;
     
-    t += _time->_deltaTime * (_keyboard->isPressing[SDL_SCANCODE_LCTRL] * 2 - 1);
+    t += float(_time->_deltaTime) * (_keyboard->isPressing[SDL_SCANCODE_LCTRL] * 2 - 1);
     t = math::clamp(t, 0.0f, animationTime);
     set_fov(math::cos_interp(70, 77, t / animationTime));
     
-    float deltaSpeed = _time->_deltaTime * speed * (_keyboard->isPressing[SDL_SCANCODE_LCTRL] + 1);
+    float deltaSpeed = float(_time->_deltaTime) * speed * (_keyboard->isPressing[SDL_SCANCODE_LCTRL] + 1);
     
     move_up((_keyboard->isPressing[SDL_SCANCODE_SPACE] - _keyboard->isPressing[SDL_SCANCODE_LSHIFT]) * deltaSpeed);
     move_forward((_keyboard->isPressing[SDL_SCANCODE_W] - _keyboard->isPressing[SDL_SCANCODE_S]) * deltaSpeed);

@@ -41,7 +41,7 @@ public:
 
 #ifdef _DEBUG 
 # ifdef _CRTDBG_MAP_ALLOC 
-#   define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+//#   define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
 # endif // _CRTDBG_MAP_ALLOC
 #endif // _DEBUG
 

@@ -15,7 +15,7 @@ if(NOT WIN32)
 endif()
 
 # Linking with core
-target_link_libraries(Example Engine-Core)
+target_link_libraries(Example EngineCore)
 
 # Set default working directory for Xcode IDE
 set_target_properties(Example

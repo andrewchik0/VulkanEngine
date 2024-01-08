@@ -101,7 +101,7 @@ namespace VKEngine {
 
   LRESULT CALLBACK WindowsWindow::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
   {
-    dynamic_cast<WindowsWindow&>(Engine::get()->window()).msg_handle(hWnd, uMsg, wParam, lParam);
+    return dynamic_cast<WindowsWindow&>(Engine::get()->window()).msg_handle(hWnd, uMsg, wParam, lParam);
   }
 
   LRESULT WindowsWindow::msg_handle(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -136,12 +136,12 @@ namespace VKEngine {
         case WM_MBUTTONDOWN:
           SetCapture(hWnd);
 
-          INT X = (INT)(SHORT)LOWORD(lParam);
+          /*INT X = (INT)(SHORT)LOWORD(lParam);
           INT Y = (INT)(SHORT)HIWORD(lParam);
-          UINT Keys = (UINT)(SHORT)LOWORD(wParam);
+          UINT Keys = (UINT)(SHORT)LOWORD(wParam);*/
 
           // Handle mouse buttons down
-
+          return 0;
         case WM_LBUTTONUP:
         case WM_RBUTTONUP:
         case WM_MBUTTONUP:

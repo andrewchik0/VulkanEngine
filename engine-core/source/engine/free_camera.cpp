@@ -5,16 +5,14 @@ namespace VKEngine {
   
   void FreeCamera::init(Engine* engine, uint32_t width, uint32_t height)
   {
-    _keyboard = &engine->window()._keyboard;
-    _mouse = &engine->window()._mouse;
     _time = &engine->time();
     resize(width, height);
-    
+
     // engine->_windowHandler.hide_cursor();
   }
   
   void FreeCamera::handle()
-  {
+  {/*
     static float t = 0.0f;
     const float animationTime = .2f;
     
@@ -30,7 +28,7 @@ namespace VKEngine {
     
     if (_mouse->isPressing[SDL_BUTTON_LEFT])
       rotate(_mouse->movedX / 250.0f * sensitivity, _mouse->movedY / 250.0f * sensitivity);
-    
+    */
     recalculate();
   }
   

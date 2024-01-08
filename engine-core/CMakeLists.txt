@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.24)
-
 set(ENGINE_CORE EngineCore)
 set(CMAKE_CXX_STANDARD 20)
 
@@ -16,52 +15,50 @@ file(GLOB THIRD_PARTY_FILES
   "third_party/stb_image/*"
 )
 
+file(GLOB_RECURSE SHADER_FILES 
+  "shaders/*.vert" "shaders/*.frag" "shaders/*.comp" "shaders/*.geom" "shaders/*.tese" "shaders/*.tesc"
+)
+
 add_compile_definitions(GLSLC_EXECUTABLE=${Vulkan_GLSLC_EXECUTABLE})
 
 # Add static library
-add_library(${ENGINE_CORE} SHARED ${ENGINE_FILES} ${THIRD_PARTY_FILES})
+set(ALL_SOURCES ${ENGINE_FILES} ${THIRD_PARTY_FILES} ${SHADER_FILES})
+add_library(${ENGINE_CORE} STATIC ${ALL_SOURCES})
 
 target_include_directories(${ENGINE_CORE} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/source/)
 
-target_precompile_headers(${ENGINE_CORE} PUBLIC 
-  ${CMAKE_CURRENT_LIST_DIR}/source/engine/pch.h
-)
+# Set filters to the target
+foreach(SOURCE IN ITEMS ${ALL_SOURCES})
+  get_filename_component(SOURCE_PATH "${SOURCE}" PATH)
+  file(RELATIVE_PATH SOURCE_PATH_RELATIVE "${CMAKE_CURRENT_LIST_DIR}/" "${SOURCE_PATH}")
+  string(REPLACE "/" "\\" GROUP_PATH "${SOURCE_PATH_RELATIVE}")
+  source_group("${GROUP_PATH}" FILES "${SOURCE}")
+endforeach()
 
-#
-# Link and include external dependencies
-#
+# Configure precompiled headers
+target_precompile_headers(${ENGINE_CORE} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/source/engine/pch.h)
+source_group("generated" FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${ENGINE_CORE}.dir/cmake_pch.cxx)
+foreach(config_type ${CMAKE_CONFIGURATION_TYPES})
+  source_group("generated" FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${ENGINE_CORE}.dir/${config_type}/cmake_pch.hxx)
+endforeach()
 
+# Include third party dependencies
 target_include_directories(${ENGINE_CORE} SYSTEM PUBLIC ${CMAKE_CURRENT_LIST_DIR}/third_party/)
-
-# Add glm git submodule
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/third_party/glm)
-target_link_libraries(${ENGINE_CORE} PUBLIC glm::glm)
 
 # Vulkan
 find_package(Vulkan REQUIRED OPTIONAL_COMPONENTS shaderc_combined)
 target_link_libraries(${ENGINE_CORE} PUBLIC Vulkan::Vulkan Vulkan::shaderc_combined)
+target_include_directories(${ENGINE_CORE} PUBLIC ${Vulkan_INCLUDE_DIRS})
 
 # SDL2
-find_package(SDL2 REQUIRED)
-target_link_libraries(${ENGINE_CORE} PUBLIC SDL2::SDL2)
-
-#
-# Configure IDE environment
-#
-
-if (APPLE)
-  find_library(SDL2_PATH SDL2)
-  # string(REPLACE "/Headers" "" SDL2_FRAMEWORK ${SDL2_INCLUDE_DIR})
-  # message(STATUS ${SDL2_PATH})
-  
-  # target_link_libraries(${ENGINE_CORE} PUBLIC "-framework ${SDL2_PATH}")
-  
-  # Set default working directory for Xcode IDE
-  set_target_properties(${ENGINE_CORE} PROPERTIES
-    # XCODE_EMBED_FRAMEWORKS ${SDL2_PATH}
-    # XCODE_LINK_BUILD_PHASE_MODE KNOWN_LOCATION
-    XCODE_GENERATE_SCHEME TRUE
-    XCODE_SCHEME_WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-    # LINK_FLAGS "-Wl,-F/Library/Frameworks"
-  )
+if(NOT WIN32)
+  find_package(SDL2 REQUIRED)
+  target_link_libraries(${ENGINE_CORE} PUBLIC SDL2::SDL2)
 endif()
+
+# Configure IDE environment
+set_target_properties(${ENGINE_CORE} PROPERTIES
+  XCODE_GENERATE_SCHEME TRUE
+  XCODE_SCHEME_WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+  FOLDER "Engine-Core"
+)

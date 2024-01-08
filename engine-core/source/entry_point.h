@@ -15,13 +15,18 @@ namespace VKEngine {
   }
 }
 
+#ifdef PLATFORM_WINDOWS
+
+INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR* CmdLine, INT ShowCmd)
+{
+  return VKEngine::Main(__argc, __argv);
+}
+
+#else
+
 int main(int argc, char* argv[])
 {
   return VKEngine::Main(argc, argv);
 }
 
-/*
- private и public поменять местами
- логгер с макросами файла
- добавить m и убрать эту конвенцию у публичных переменных
- */
+#endif // PLATFORM_WINDOWS

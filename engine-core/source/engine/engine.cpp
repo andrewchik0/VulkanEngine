@@ -8,8 +8,9 @@ namespace VKEngine {
   {
     s_instance = this;
     
-    _windowHandler.init([&](){ draw(); }, [&](){ recreate(); });
-    _camera.init(this, _windowHandler.width(), _windowHandler.height());
+    _window = Window::create_window();
+    _window.get()->init([&](){ draw(); }, [&](){ recreate(); });
+    _camera.init(this, _window.get()->width(), _window.get()->height());
     _render.init();
     
     init_scene();
@@ -23,13 +24,13 @@ namespace VKEngine {
       return;
     
     _render.cleanup();
-    _windowHandler.cleanup();
+    _window.get()->cleanup();
   }
   
   void Engine::recreate()
   {
     _render.recreate();
-    _camera.init(_windowHandler.width(), _windowHandler.height());
+    _camera.init(_window.get()->width(), _window.get()->height());
   }
   
   void Engine::draw()
@@ -44,7 +45,7 @@ namespace VKEngine {
   
   void Engine::run()
   {
-    _windowHandler.run();
+    _window.get()->run();
   }
   
   void Engine::init_scene()

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "free_camera.h"
-#include "../os_level/window_handler.h"
+#include "../os_level/window.h"
 #include "render/render.h"
 
 namespace VKEngine {
@@ -14,10 +14,10 @@ namespace VKEngine {
     
     FreeCamera _camera;
     
-    WindowHandler _windowHandler;
+    std::unique_ptr<Window> _window;
     Utils::TimeHandler _timeHandler;
     Utils::FileWatchers _fileWatchers;
-    Render _render{_windowHandler.width(), _windowHandler.height()};
+    Render _render{_window.get()->width(), _window.get()->height()};
     
     void init_scene();
   public:
@@ -31,7 +31,7 @@ namespace VKEngine {
     inline static Engine* get() { return s_instance; }
     
     inline Camera& camera() { return _camera; }
-    inline WindowHandler& window() { return _windowHandler; }
+    inline Window& window() { return *_window.get(); }
     inline Utils::TimeHandler& time() { return _timeHandler; }
     inline Utils::FileWatchers& file_watchers() { return _fileWatchers; }
     inline Render& render() { return _render; }

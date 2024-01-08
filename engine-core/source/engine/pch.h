@@ -9,12 +9,20 @@
 #include <unordered_map>
 #include <map>
 
+#include <vulkan/vulkan.hpp>
+
+#include <vk_mem_alloc/vk_mem_alloc.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+
+#include "utils/math/math.h"
 #include "utils/file_watcher.h"
 #include "utils/time_handler.h"
 #include "utils/macros.h"
 
 // Handle mamory leaks in debug mode
-#ifndef NDEBUG 
+#if defined(_DEBUG) & defined(_WIN32)
 # define _CRTDBG_MAP_ALLOC
 # include <crtdbg.h>
 # define SetDbgMemHooks() \

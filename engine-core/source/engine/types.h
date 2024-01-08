@@ -2,15 +2,6 @@
 
 #include "pch.h"
 
-#include <vulkan/vulkan.hpp>
-
-#include <vk_mem_alloc/vk_mem_alloc.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
-
-#include "utils/math/math.h"
-
 #ifdef PLATFORM_WINDOWS
 # include <vulkan/vulkan_win32.h>
 #endif // PLATFORM_WINDOWS

@@ -44,6 +44,7 @@ endforeach()
 
 # Include third party dependencies
 target_include_directories(${ENGINE_CORE} SYSTEM PUBLIC ${CMAKE_CURRENT_LIST_DIR}/third_party/)
+target_include_directories(${ENGINE_CORE} SYSTEM PUBLIC ${CMAKE_CURRENT_LIST_DIR}/third_party/glm)
 
 # Vulkan
 find_package(Vulkan REQUIRED OPTIONAL_COMPONENTS shaderc_combined)

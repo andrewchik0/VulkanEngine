@@ -19,14 +19,27 @@ namespace VKEngine {
     
     std::string get_full_filename() const
     {
+      std::filesystem::path path = std::filesystem::current_path() / "shaders";
+      std::string ext;
+
       switch (kind) {
         case SHADER_VERTEX:
-          return "shaders/" + filename + ".vert";
+          ext = ".vert";
+          break;
         case SHADER_FRAGMENT:
-          return "shaders/" + filename + ".frag";
+          ext = ".frag";
+          break;
         default:
-          return "";
+          ext = "";
+          break;
       }
+      if (std::filesystem::exists(path / (filename + ext)))
+        return filename + ext;
+
+      path = std::filesystem::path(SHADERS_FOLDER_DEV);
+      if (std::filesystem::exists(path /= (filename + ext)))
+        return path.string();
+      return std::string();
     }
   };
   

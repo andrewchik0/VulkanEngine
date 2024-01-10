@@ -19,8 +19,6 @@ file(GLOB_RECURSE SHADER_FILES
   "shaders/*.vert" "shaders/*.frag" "shaders/*.comp" "shaders/*.geom" "shaders/*.tese" "shaders/*.tesc"
 )
 
-add_compile_definitions(GLSLC_EXECUTABLE=${Vulkan_GLSLC_EXECUTABLE})
-
 # Add static library
 set(ALL_SOURCES ${ENGINE_FILES} ${THIRD_PARTY_FILES} ${SHADER_FILES})
 add_library(${ENGINE_CORE} STATIC ${ALL_SOURCES})
@@ -34,6 +32,11 @@ foreach(SOURCE IN ITEMS ${ALL_SOURCES})
   string(REPLACE "/" "\\" GROUP_PATH "${SOURCE_PATH_RELATIVE}")
   source_group("${GROUP_PATH}" FILES "${SOURCE}")
 endforeach()
+
+target_compile_definitions(${ENGINE_CORE}
+  PUBLIC GLSLC_EXECUTABLE=${Vulkan_GLSLC_EXECUTABLE}
+  PUBLIC SHADERS_FOLDER_DEV="${CMAKE_CURRENT_LIST_DIR}/shaders"
+)
 
 # Configure precompiled headers
 target_precompile_headers(${ENGINE_CORE} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/source/engine/pch.h)
@@ -61,5 +64,7 @@ endif()
 set_target_properties(${ENGINE_CORE} PROPERTIES
   XCODE_GENERATE_SCHEME TRUE
   XCODE_SCHEME_WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+  MSVC_RUNTIME_LIBRARY "MultiThreadedDLL"
   FOLDER "Engine-Core"
 )
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")

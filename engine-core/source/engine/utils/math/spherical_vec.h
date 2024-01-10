@@ -6,7 +6,7 @@
 
 namespace VKEngine::math {
   
-  constexpr float PI = 3.14159265359;
+  constexpr float PI = 3.14159265359f;
   
   class sph_vec3
   {

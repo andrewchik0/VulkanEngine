@@ -3,14 +3,14 @@
 
 namespace VKEngine {
   
-  void Render::init()
+  void Render::init(uint32_t* width, uint32_t* height)
   {
-    uint32_t w = _width;
-    uint32_t h = _height;
+    _width = width;
+    _height = height;
     
     _vkState.init();
-    _swapchainHandler.init(&_vkState, w, h);
-    _renderPasses.init(_vkState.device, &_swapchainHandler, w, h);
+    _swapchainHandler.init(&_vkState, *width, *height);
+    _renderPasses.init(_vkState.device, &_swapchainHandler, *width, *height);
     _frames.init(&_vkState, &_swapchainHandler, &_renderPasses);
     _uploadContext.init(&_vkState);
     _descriptors.init(&_vkState, &_frames);
@@ -40,8 +40,8 @@ namespace VKEngine {
     _renderPasses.destroy();
     _swapchainHandler.destroy();
     
-    _swapchainHandler.init(_width, _height);
-    _renderPasses.init(_width, _height);
+    _swapchainHandler.init(*_width, *_height);
+    _renderPasses.init(*_width, *_height);
     _frames.init();
     
     _pipelines.reload();

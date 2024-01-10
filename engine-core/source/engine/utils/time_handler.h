@@ -34,7 +34,7 @@ namespace VKEngine::Utils {
     template<typename T>
     uint64_t get_time();
   public:
-    double _deltaTime, _fps, _timeSinceStart;
+    double _deltaTime = 0, _fps = 0, _timeSinceStart = 0;
     
     TimeHandler();
     

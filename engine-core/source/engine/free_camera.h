@@ -17,7 +17,7 @@ namespace VKEngine {
 
     Utils::TimeHandler* _time;
     float speed = 10.0;
-    float sensitivity = 1;
+    float sensitivity = 1.0f;
   };
   
 }

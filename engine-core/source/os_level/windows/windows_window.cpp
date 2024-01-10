@@ -2,6 +2,8 @@
 
 #ifdef PLATFORM_WINDOWS
 
+#include <windowsx.h>
+
 #include "../../engine/engine.h"
 
 namespace VKEngine {
@@ -18,6 +20,7 @@ namespace VKEngine {
 
     wc.lpfnWndProc = WindowProc;
     wc.hInstance = _hInstance;
+    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc.lpszClassName = CLASS_NAME;
 
     RegisterClass(&wc);
@@ -25,12 +28,11 @@ namespace VKEngine {
     // Create the window.
 
     _hWnd = CreateWindowEx(
-      0,                              // Optional window styles.
-      CLASS_NAME,                     // Window class
-      "Learn to Program Windows",     // Window text
-      WS_OVERLAPPEDWINDOW,            // Window style
+      0,
+      CLASS_NAME,
+      "Learn to Program Windows",
+      WS_OVERLAPPEDWINDOW,
 
-      // Size and position
       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 
       NULL,       // Parent window    
@@ -44,11 +46,7 @@ namespace VKEngine {
       return;
     }
 
-#if _DEBUG
-    ShowWindow(_hWnd, true);
-#else
-    ShowWindow(_hWnd, false);
-#endif // _DEBUG
+    ShowWindow(_hWnd, SW_NORMAL);
     UpdateWindow(_hWnd);
   }
 
@@ -75,7 +73,10 @@ namespace VKEngine {
       else
       {
         if (!IsIconic(_hWnd))
+        {
           _mainloopFunction();
+          _input.reset();
+        }
       }
     }
   }
@@ -97,6 +98,10 @@ namespace VKEngine {
 
   void WindowsWindow::hide_cursor()
   {
+    if (_bIsCursorHided)
+      ShowCursor(true);
+    else
+      while (ShowCursor(false) >= 0);
   }
 
   LRESULT CALLBACK WindowsWindow::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -106,6 +111,8 @@ namespace VKEngine {
 
   LRESULT WindowsWindow::msg_handle(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
   {
+    static POINT s_oldMousePos{};
+
     switch (uMsg)
     {
     case WM_GETMINMAXINFO:
@@ -116,7 +123,7 @@ namespace VKEngine {
         GetSystemMetrics(SM_CYBORDER) * 2;
       return 0;
     case WM_CREATE:
-      SetWindowLong(hWnd, 0, (UINT_PTR)((CREATESTRUCT*)lParam)->lpCreateParams);
+      SetWindowLong(hWnd, 0, (LONG)(UINT_PTR)((CREATESTRUCT*)lParam)->lpCreateParams);
     default:
       if (hWnd != nullptr)
         switch (uMsg)
@@ -129,25 +136,31 @@ namespace VKEngine {
           _recreateFunction();
           return 0;
         case WM_MOUSEWHEEL:
-          // Handle mouse wheel
+          _input.handle_mousewheel(GET_WHEEL_DELTA_WPARAM(wParam), 0);
           return 0;
         case WM_LBUTTONDOWN:
         case WM_RBUTTONDOWN:
         case WM_MBUTTONDOWN:
           SetCapture(hWnd);
-
-          /*INT X = (INT)(SHORT)LOWORD(lParam);
-          INT Y = (INT)(SHORT)HIWORD(lParam);
-          UINT Keys = (UINT)(SHORT)LOWORD(wParam);*/
-
-          // Handle mouse buttons down
+          handle_wParam_mouse(wParam);
           return 0;
         case WM_LBUTTONUP:
         case WM_RBUTTONUP:
         case WM_MBUTTONUP:
           ReleaseCapture();
-
-          // Handle mouse buttons up
+          handle_wParam_mouse(wParam);
+          return 0;
+        case WM_MOUSEMOVE:
+          _input.handle_mousemotion(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GET_X_LPARAM(lParam) - s_oldMousePos.x, GET_Y_LPARAM(lParam) - s_oldMousePos.y);
+          s_oldMousePos = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+          return 0;
+        case WM_KEYDOWN:
+          _input.handle_keys((Key)wParam, true);
+          handle_extended_keycodes(wParam, lParam, true);
+          return 0;
+        case WM_KEYUP:
+          _input.handle_keys((Key)wParam, false);
+          handle_extended_keycodes(wParam, lParam, false);
           return 0;
         case WM_DESTROY:
           PostQuitMessage(0);
@@ -155,6 +168,63 @@ namespace VKEngine {
         }
     }
     return DefWindowProc(hWnd, uMsg, wParam, lParam);
+  }
+
+  void WindowsWindow::handle_wParam_mouse(WPARAM wParam)
+  {
+    _input.handle_keys(KeyCodes::MouseLeftButton, wParam & MK_LBUTTON);
+    _input.handle_keys(KeyCodes::MouseRightButton, wParam & MK_LBUTTON);
+    _input.handle_keys(KeyCodes::MouseMiddleButton, wParam & MK_LBUTTON);
+  }
+
+  void WindowsWindow::handle_extended_keycodes(WPARAM wParam, LPARAM lParam, bool isPressed)
+  {
+    if ((Key)wParam == VK_MENU || (Key)wParam == VK_SHIFT || (Key)wParam == VK_CONTROL)
+    {
+      UINT scancode = (lParam & 0x00ff0000) >> 16;
+      _input.handle_keys((Key)MapVirtualKey(scancode, MAPVK_VSC_TO_VK_EX), isPressed);
+    }
+  }
+
+  void WindowsWindow::go_fullscreen()
+  {
+    if (!_bIsFullscreen)
+    {
+      HMONITOR hMon;
+      MONITORINFOEX moninfo{};
+      RECT rc;
+
+      _bIsFullscreen = true;
+
+      // Save old window size and position 
+      GetWindowRect(_hWnd, &_fullScreenSaveRect);
+
+      // Get closest monitor
+      hMon = MonitorFromWindow(_hWnd, MONITOR_DEFAULTTONEAREST);
+
+      // Get monitor information
+      moninfo.cbSize = sizeof(moninfo);
+      GetMonitorInfo(hMon, (MONITORINFO*)&moninfo);
+
+      rc = moninfo.rcMonitor;
+      AdjustWindowRect(&rc, GetWindowLong(_hWnd, GWL_STYLE), FALSE);
+
+      // Expand window to full screen
+      SetWindowPos(_hWnd, HWND_TOP,
+        rc.left, rc.top,
+        rc.right - rc.left, rc.bottom - rc.top,
+        SWP_NOOWNERZORDER);
+    }
+    else
+    {
+      _bIsFullscreen = false;
+
+      // Restore window size and position
+      SetWindowPos(_hWnd, HWND_NOTOPMOST,
+        _fullScreenSaveRect.left, _fullScreenSaveRect.top,
+        _fullScreenSaveRect.right - _fullScreenSaveRect.left, _fullScreenSaveRect.bottom - _fullScreenSaveRect.top,
+        SWP_NOOWNERZORDER);
+    }
   }
 }
 

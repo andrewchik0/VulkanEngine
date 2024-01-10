@@ -21,25 +21,20 @@ namespace VKEngine {
   class Render
   {
   private:
-    uint32_t &_width, &_height;
+    uint32_t *_width, *_height;
     VkState _vkState;
     
     std::vector<RenderObject> _renderables;
-    
-    void init_vulkan();
-    
+
     void draw_objects(VkCommandBuffer cmd, RenderObject* first, uint32_t count);
     
     size_t pad_uniform_buffer_size(size_t originalSize);
   public:
-    Render(uint32_t &width, uint32_t &height)
-      : _width(width), _height(height)
-    {}
     
     void add_object(RenderObject& object) { _renderables.push_back(object); }
     VkState& get_vk_state() { return _vkState; }
-    uint32_t& width() { return _width; }
-    uint32_t& height() { return _height; }
+    uint32_t& width() { return *_width; }
+    uint32_t& height() { return *_height; }
     
     SwapchainHandler _swapchainHandler;
     RenderPasses _renderPasses;
@@ -51,7 +46,7 @@ namespace VKEngine {
     Frames _frames;
     UploadContext _uploadContext;
     
-    void init();
+    void init(uint32_t *width, uint32_t* height);
     void cleanup();
     void recreate();
     void draw();

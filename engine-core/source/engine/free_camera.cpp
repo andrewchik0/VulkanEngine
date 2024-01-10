@@ -12,23 +12,23 @@ namespace VKEngine {
   }
   
   void FreeCamera::handle()
-  {/*
+  {
     static float t = 0.0f;
     const float animationTime = .2f;
     
-    t += float(_time->_deltaTime) * (_keyboard->isPressing[SDL_SCANCODE_LCTRL] * 2 - 1);
+    t += float(_time->_deltaTime) * (is_pressing(KeyCodes::LeftControl) * 2 - 1);
     t = math::clamp(t, 0.0f, animationTime);
     set_fov(math::cos_interp(70, 77, t / animationTime));
     
-    float deltaSpeed = float(_time->_deltaTime) * speed * (_keyboard->isPressing[SDL_SCANCODE_LCTRL] + 1);
+    float deltaSpeed = float(_time->_deltaTime) * speed * (is_pressing(KeyCodes::LeftControl) + 1);
     
-    move_up((_keyboard->isPressing[SDL_SCANCODE_SPACE] - _keyboard->isPressing[SDL_SCANCODE_LSHIFT]) * deltaSpeed);
-    move_forward((_keyboard->isPressing[SDL_SCANCODE_W] - _keyboard->isPressing[SDL_SCANCODE_S]) * deltaSpeed);
-    move_right((_keyboard->isPressing[SDL_SCANCODE_D] - _keyboard->isPressing[SDL_SCANCODE_A]) * deltaSpeed);
-    
-    if (_mouse->isPressing[SDL_BUTTON_LEFT])
-      rotate(_mouse->movedX / 250.0f * sensitivity, _mouse->movedY / 250.0f * sensitivity);
-    */
+    move_up((is_pressing(KeyCodes::Space) - is_pressing(KeyCodes::LeftShift)) * deltaSpeed);
+    move_forward((is_pressing(KeyCodes::W) - is_pressing(KeyCodes::S)) * deltaSpeed);
+    move_right((is_pressing(KeyCodes::D) - is_pressing(KeyCodes::A)) * deltaSpeed);
+
+    if (is_pressing(KeyCodes::MouseLeftButton))
+      rotate(mouse_delta().x / 250.0f * sensitivity, mouse_delta().y / 250.0f * sensitivity);
+
     recalculate();
   }
   

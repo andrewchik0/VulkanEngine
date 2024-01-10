@@ -10,14 +10,14 @@ namespace VKEngine {
   private:
     static Engine* s_instance;
     
-    bool _isInitialized{ false };
+    bool _bIsInitialized{ false };
     
     FreeCamera _camera;
     
     std::unique_ptr<Window> _window;
     Utils::TimeHandler _timeHandler;
     Utils::FileWatchers _fileWatchers;
-    Render _render{_window.get()->width(), _window.get()->height()};
+    Render _render;
     
     void init_scene();
   public:

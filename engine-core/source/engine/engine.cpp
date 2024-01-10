@@ -11,16 +11,16 @@ namespace VKEngine {
     _window = Window::create_window();
     _window.get()->init([&](){ draw(); }, [&](){ recreate(); });
     _camera.init(this, _window.get()->width(), _window.get()->height());
-    _render.init();
+    _render.init(&_window.get()->width(), &_window.get()->height());
     
     init_scene();
     
-    _isInitialized = true;
+    _bIsInitialized = true;
   }
   
   void Engine::cleanup()
   {
-    if (!_isInitialized)
+    if (!_bIsInitialized)
       return;
     
     _render.cleanup();
@@ -29,6 +29,9 @@ namespace VKEngine {
   
   void Engine::recreate()
   {
+    if (!_bIsInitialized)
+      return;
+
     _render.recreate();
     _camera.init(_window.get()->width(), _window.get()->height());
   }
@@ -60,6 +63,8 @@ namespace VKEngine {
     vertices[1].color = { 0.f, 0.f, 1.0f };
     vertices[2].color = { 1.f, 0.f, 0.0f };
     
+    auto path = std::filesystem::current_path();
+
     _render._meshes.create("monkey", "assets/monkey_smooth.obj");
     _render._meshes.create("empire", "assets/lost_empire.obj");
     _render._meshes.create("triangle", vertices);

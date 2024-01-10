@@ -11,13 +11,6 @@ namespace VKEngine {
   template<typename Key, class Val>
   class ResourceManager
   {
-  protected:
-    static_assert(std::is_base_of<IResource, Val>::value, "Val must be derived from IResource");
-    
-    Render* _render = nullptr;
-    
-    std::unordered_map<Key, Val> _resources;
-    
   public:
     void init(Render* render)
     {
@@ -48,6 +41,13 @@ namespace VKEngine {
     }
     
     inline Val* operator[](const Key& key) { return get(key); }
+
+  protected:
+    static_assert(std::is_base_of<IResource, Val>::value, "Val must be derived from IResource");
+    
+    Render* _render = nullptr;
+    
+    std::unordered_map<Key, Val> _resources;
   };
 }
 

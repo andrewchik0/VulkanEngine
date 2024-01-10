@@ -20,15 +20,6 @@ namespace VKEngine {
   
   class Render
   {
-  private:
-    uint32_t *_width, *_height;
-    VkState _vkState;
-    
-    std::vector<RenderObject> _renderables;
-
-    void draw_objects(VkCommandBuffer cmd, RenderObject* first, uint32_t count);
-    
-    size_t pad_uniform_buffer_size(size_t originalSize);
   public:
     
     void add_object(RenderObject& object) { _renderables.push_back(object); }
@@ -50,6 +41,16 @@ namespace VKEngine {
     void cleanup();
     void recreate();
     void draw();
+
+  private:
+    uint32_t *_width, *_height;
+    VkState _vkState;
+    
+    std::vector<RenderObject> _renderables;
+
+    void draw_objects(VkCommandBuffer cmd, RenderObject* first, uint32_t count);
+    
+    size_t pad_uniform_buffer_size(size_t originalSize);
   };
   
 }

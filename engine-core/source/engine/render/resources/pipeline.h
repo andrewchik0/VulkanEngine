@@ -85,6 +85,14 @@ namespace VKEngine {
   
   class Pipelines : public ResourceManager<std::string, Pipeline>
   {
+  public:
+    void reload();
+    void reload(const std::string& name);
+    void destroy();
+    
+    Pipeline* create(const std::string& name, const std::vector<ShaderData>& shaderData);
+    Pipeline* create(const std::string& name, const std::string& filename);
+
   private:
     std::unordered_map<std::string, VkShaderModule> _loadedShaders;
     
@@ -99,13 +107,6 @@ namespace VKEngine {
     bool build(const std::vector<ShaderData>& shaderData, Pipeline& pipeline, bool bUseCache = true);
 
     std::vector<ShaderData> filename_to_shaderdata(const std::string& filename);
-  public:
-    void reload();
-    void reload(const std::string& name);
-    void destroy();
-    
-    Pipeline* create(const std::string& name, const std::vector<ShaderData>& shaderData);
-    Pipeline* create(const std::string& name, const std::string& filename);
   };
   
 }

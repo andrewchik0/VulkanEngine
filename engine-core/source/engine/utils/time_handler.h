@@ -12,6 +12,14 @@ namespace VKEngine::Utils {
   
   class TimeHandler
   {
+  public:
+    double _deltaTime = 0, _fps = 0, _timeSinceStart = 0;
+    
+    TimeHandler();
+    
+    void tick();
+    void mark_zone(const char* zoneName);
+
   private:
     // Time in nanoseconds
     uint64_t _timeSinceStart_ns, _startTime_ns, _deltaTime_ns;
@@ -33,13 +41,6 @@ namespace VKEngine::Utils {
     
     template<typename T>
     uint64_t get_time();
-  public:
-    double _deltaTime = 0, _fps = 0, _timeSinceStart = 0;
-    
-    TimeHandler();
-    
-    void tick();
-    void mark_zone(const char* zoneName);
   };
 
 }

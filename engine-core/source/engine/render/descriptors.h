@@ -22,6 +22,18 @@ namespace VKEngine {
   
   class Descriptors
   {
+  public:
+    VkDescriptorPool _descriptorPool{ VK_NULL_HANDLE };
+    VkDescriptorSetLayout _globalLayout{ VK_NULL_HANDLE };
+    VkDescriptorSetLayout _cameraLayout{ VK_NULL_HANDLE };
+    VkDescriptorSetLayout _objectLayout{ VK_NULL_HANDLE };
+    VkDescriptorSetLayout _textureLayout{ VK_NULL_HANDLE };
+    
+    void init(VkState* state, Frames* frames);
+    void destroy();
+    
+    AllocatedBuffer create_buffer(size_t allocSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage);
+
   private:
     VkState* _vkState;
     Frames* _frames;
@@ -40,18 +52,6 @@ namespace VKEngine {
       { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
       { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
     };
-    
-  public:
-    VkDescriptorPool _descriptorPool{ VK_NULL_HANDLE };
-    VkDescriptorSetLayout _globalLayout{ VK_NULL_HANDLE };
-    VkDescriptorSetLayout _cameraLayout{ VK_NULL_HANDLE };
-    VkDescriptorSetLayout _objectLayout{ VK_NULL_HANDLE };
-    VkDescriptorSetLayout _textureLayout{ VK_NULL_HANDLE };
-    
-    void init(VkState* state, Frames* frames);
-    void destroy();
-    
-    AllocatedBuffer create_buffer(size_t allocSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage);
   };
   
 }

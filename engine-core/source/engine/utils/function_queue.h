@@ -7,9 +7,6 @@ namespace VKEngine::Utils {
   
   class FunctionQueue
   {
-  private:
-    std::deque<std::function<void()>> _functions;
-    
   public:
     void push_function(std::function<void()>&& function)
     {
@@ -24,6 +21,9 @@ namespace VKEngine::Utils {
       }
       _functions.clear();
     }
+
+  private:
+    std::deque<std::function<void()>> _functions;
   };
   
 }

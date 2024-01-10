@@ -27,17 +27,6 @@ namespace VKEngine {
   
   class Frames
   {
-  private:
-    VkState* _vkState;
-    SwapchainHandler* _swapchainHandler;
-    RenderPasses *_renderPasses;
-    
-    const uint32_t _timeout = (uint32_t)1e9;
-    FrameData _frames[FRAME_OVERLAP];
-    uint64_t _frameNumber{0};
-    
-    VkClearColorValue _clearValue = {{ 0.2f, 0.2f, 0.2f, 0.2f }};
-    uint32_t swapchainImageIndex;
   public:
     void init(VkState* state, SwapchainHandler* swapchain, RenderPasses *passes);
     void init() { init(_vkState, _swapchainHandler, _renderPasses); }
@@ -51,6 +40,18 @@ namespace VKEngine {
     
     void start();
     void end();
+
+  private:
+    VkState* _vkState;
+    SwapchainHandler* _swapchainHandler;
+    RenderPasses *_renderPasses;
+    
+    const uint32_t _timeout = (uint32_t)1e9;
+    FrameData _frames[FRAME_OVERLAP];
+    uint64_t _frameNumber{0};
+    
+    VkClearColorValue _clearValue = {{ 0.2f, 0.2f, 0.2f, 0.2f }};
+    uint32_t swapchainImageIndex;
   };
   
 }

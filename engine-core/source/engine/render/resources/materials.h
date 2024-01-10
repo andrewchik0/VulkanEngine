@@ -15,9 +15,10 @@ namespace VKEngine {
   
   class Materials : public ResourceManager<std::string, Material>
   {
-  private:
   public:
     Material* create(const std::string& name, Pipeline* pipeline);
+
+  private:
   };
   
 }

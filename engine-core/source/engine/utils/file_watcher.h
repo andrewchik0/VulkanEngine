@@ -8,11 +8,6 @@ namespace VKEngine::Utils {
   
   class FileWatcher
   {
-  private:
-    std::filesystem::path _path;
-    std::function<void()> _onModifiedFunction;
-    std::filesystem::file_time_type _lastTimeModified;
-    
   public:
     
     FileWatcher(const std::string& filename, const std::function<void()>& onModifiedFunction)
@@ -31,14 +26,16 @@ namespace VKEngine::Utils {
         _onModifiedFunction();
       }
     }
+
+  private:
+    std::filesystem::path _path;
+    std::function<void()> _onModifiedFunction;
+    std::filesystem::file_time_type _lastTimeModified;
   };
   
   
   class FileWatchers
   {
-  private:
-    std::vector<FileWatcher> _watchers;
-    
   public:
     
     void add_watcher(const std::string& filename, const std::function<void()>& onModifiedFunction)
@@ -53,5 +50,8 @@ namespace VKEngine::Utils {
         watcher.tick();
       }
     }
+
+  private:
+    std::vector<FileWatcher> _watchers;
   };
 }

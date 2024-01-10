@@ -6,18 +6,6 @@ namespace VKEngine {
   
   class Camera
   {
-  protected:
-    glm::mat4 _view, _proj, _viewProj;
-    glm::vec3 _pos, _lookAt, _up;
-    uint32_t _width, _height;
-    float _fov, _far, _near;
-    
-    void recalculate()
-    {
-      _view = glm::lookAt(_pos, _pos + _lookAt, _up);
-      _proj = glm::perspective(glm::radians(_fov), (float)_width / (float)_height, _near, _far);
-      _viewProj = _proj * _view;
-    }
   public:
     Camera() :
     _pos(0.0f),
@@ -84,6 +72,20 @@ namespace VKEngine {
     }
     
     virtual void handle() = 0;
+
+  protected:
+    glm::mat4 _view, _proj, _viewProj;
+    glm::vec3 _pos, _lookAt, _up;
+    uint32_t _width, _height;
+    float _fov, _far, _near;
+    
+    void recalculate()
+    {
+      _view = glm::lookAt(_pos, _pos + _lookAt, _up);
+      _proj = glm::perspective(glm::radians(_fov), (float)_width / (float)_height, _near, _far);
+      _viewProj = _proj * _view;
+    }
+
   };
   
 }

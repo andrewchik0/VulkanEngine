@@ -6,9 +6,6 @@ namespace VKEngine {
   
   class SwapchainHandler
   {
-  private:
-    VkState *_vkState;
-    
   public:
     VkPresentModeKHR _mode = VK_PRESENT_MODE_MAILBOX_KHR;
     VkSwapchainKHR _swapchain;
@@ -26,6 +23,9 @@ namespace VKEngine {
     void destroy();
     
     void init(uint32_t width, uint32_t height) { init(_vkState, width, height); }
+
+  private:
+    VkState *_vkState;
   };
   
 }

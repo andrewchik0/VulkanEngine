@@ -18,10 +18,11 @@ namespace VKEngine {
   
   class Meshes : public ResourceManager<std::string, Mesh>
   {
-  private:
-    void upload_mesh(Mesh& mesh);
   public:
     Mesh* create(const std::string& name, const std::string& filename);
     Mesh* create(const std::string& name, const std::vector<Vertex>& vertices);
+
+  private:
+    void upload_mesh(Mesh& mesh);
   };
 }

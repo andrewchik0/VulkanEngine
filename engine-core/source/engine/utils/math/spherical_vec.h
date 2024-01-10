@@ -10,7 +10,6 @@ namespace VKEngine::math {
   
   class sph_vec3
   {
-  private:
   public:
     float theta, phi, radius;
     
@@ -35,6 +34,9 @@ namespace VKEngine::math {
         sin(theta) * sin(phi),
         cos(theta));
     }
+
+  private:
+
   };
   
 }

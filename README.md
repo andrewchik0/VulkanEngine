@@ -16,4 +16,4 @@ Game engine developed with Vulkan API
 
 #### MacOS (with Xcode)
 3. Install [SDL](https://www.libsdl.org/)
-4. Run `scripts/setup-xcode.bat`
+4. Run `scripts/setup-xcode.sh`

@@ -4,16 +4,15 @@ Game engine developed with Vulkan API
 
 ## Get started
 
-1. Install [CMake](https://cmake.org/) and [Vulkan SDK](https://vulkan.lunarg.com/sdk/home)
-2. Run `git clone --recursive https://github.com/andrewchik0/VulkanEngine.git`
+1. You should have this installed (PC restart may be needed after installation):
+    - [CMake](https://cmake.org/)
+    - [Vulkan SDK](https://vulkan.lunarg.com/sdk/home)
+    - [SDL](https://www.libsdl.org/) (only for Lunux and MacOS)
 
-#### Windows (with Visual Studio)
-3. Run `scripts/setup-vs.bat`
+1. Clone repository with recursive flag to install submodules
+    - `git clone --recursive https://github.com/andrewchik0/VulkanEngine.git`
 
-#### Linux (with Makefile)
-3. Install [SDL](https://www.libsdl.org/)
-4. Run `scripts/setup-make.sh`
-
-#### MacOS (with Xcode)
-3. Install [SDL](https://www.libsdl.org/)
-4. Run `scripts/setup-xcode.sh`
+1. Use suitable for you setup script in `scripts` folder
+    - `setup-vs.bat` for Visual Studio
+    - `setup-make.sh` for Makefile
+    - `setup-xcode.sh` for Xcode

@@ -23,7 +23,7 @@
 namespace VKEngine {
 
   struct VkState;
-
+  class ApplicationSpecs;
   class Engine;
   class Render;
   

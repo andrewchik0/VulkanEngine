@@ -3,11 +3,20 @@
 #include "engine/engine.h"
 
 namespace VKEngine {
+  struct CommandLineArgs
+  {
+    size_t count;
+    char** vector;
+  };
+  
+  ApplicationSpecs create_app(CommandLineArgs args);
+  
   int32_t Main(size_t argc, char* argv[])
   {
+    ApplicationSpecs specs = create_app({ argc, argv });
     Engine engine;
-
-    engine.init();
+    
+    engine.init(specs);
     engine.run();
     engine.cleanup();
 

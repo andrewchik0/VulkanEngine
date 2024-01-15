@@ -4,12 +4,12 @@ namespace VKEngine {
   
   Engine* Engine::s_instance = nullptr;
   
-  void Engine::init()
+  void Engine::init(ApplicationSpecs specs)
   {
     s_instance = this;
     
     _window = Window::create_window();
-    _window.get()->init([&](){ draw(); }, [&](){ recreate(); });
+    _window.get()->init(specs, [&](){ draw(); }, [&](){ recreate(); });
     _camera.init(this, _window.get()->width(), _window.get()->height());
     _render.init(&_window.get()->width(), &_window.get()->height());
     

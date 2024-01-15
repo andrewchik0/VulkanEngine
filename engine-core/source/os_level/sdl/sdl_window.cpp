@@ -2,9 +2,11 @@
 
 #ifdef USE_SDL
 
+#include "../../engine/engine.h"
+
 namespace VKEngine {
 
-  void SDLWindow::init(std::function<void()>&& mainloopFunction, std::function<void()>&& recreateFunction)
+  void SDLWindow::init(ApplicationSpecs specs, std::function<void()>&& mainloopFunction, std::function<void()>&& recreateFunction)
   {
     _mainloopFunction = mainloopFunction;
     _recreateFunction = recreateFunction;
@@ -13,7 +15,7 @@ namespace VKEngine {
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE);
 
     _window = SDL_CreateWindow(
-      "Vulkan Engine",
+      specs.name.c_str(),
       SDL_WINDOWPOS_UNDEFINED,
       SDL_WINDOWPOS_UNDEFINED,
       _windowExtent.width,

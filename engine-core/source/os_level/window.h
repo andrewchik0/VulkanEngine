@@ -13,12 +13,7 @@ namespace VKEngine {
   public:
     Input _input;
     
-    ~Window()
-    {
-      
-    }
-
-    virtual void init(std::function<void()>&& mainloopFunction, std::function<void()>&& recreateFunction) = 0;
+    virtual void init(ApplicationSpecs specs, std::function<void()>&& mainloopFunction, std::function<void()>&& recreateFunction) = 0;
     virtual void run() = 0;
     virtual void cleanup() = 0;
     virtual void create_surface(VkInstance instance, VkSurfaceKHR* surface) = 0;

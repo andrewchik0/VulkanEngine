@@ -6,10 +6,15 @@
 
 namespace VKEngine {
   
+  struct ApplicationSpecs
+  {
+    std::string name;
+  };
+  
   class Engine {
   public:
     
-    void init();
+    void init(ApplicationSpecs specs);
     void cleanup();
     void recreate();
     void draw();

@@ -9,7 +9,7 @@ namespace VKEngine {
   class SDLWindow : public Window
   {
   public:
-    void init(std::function<void()>&& mainloopFunction, std::function<void()>&& recreateFunction) override;
+    void init(ApplicationSpecs specs, std::function<void()>&& mainloopFunction, std::function<void()>&& recreateFunction) override;
     void run() override;
     void cleanup() override;
     void create_surface(VkInstance instance, VkSurfaceKHR* surface) override;

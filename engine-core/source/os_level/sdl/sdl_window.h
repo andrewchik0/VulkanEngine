@@ -14,6 +14,7 @@ namespace VKEngine {
     void cleanup() override;
     void create_surface(VkInstance instance, VkSurfaceKHR* surface) override;
     void hide_cursor() override;
+    void go_fullscreen() override;
 
   private:
     SDL_Window* _window;

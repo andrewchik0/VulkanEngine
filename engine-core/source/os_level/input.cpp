@@ -4,12 +4,12 @@
 namespace VKEngine {
   bool is_pressed(Key key)
   {
-    return Engine::get()->window()._input._isPressed[key];
+    return Engine::get()->window()._input._isPressed[KEY_MASK(key)];
   }
 
   bool is_pressing(Key key)
   {
-    return Engine::get()->window()._input._isPressing[key];
+    return Engine::get()->window()._input._isPressing[KEY_MASK(key)];
   }
 
   math::UPoint mouse_pos()

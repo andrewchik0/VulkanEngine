@@ -3,6 +3,12 @@
 #include "keycodes.h"
 #include "../engine/utils/math/math.h"
 
+#ifdef USE_SDL
+  #define KEY_MASK(x) ((x) & ~(1 << 30))
+#else
+  #define KEY_MASK(x) (x)
+#endif
+
 constexpr uint32_t KEY_AMOUNT = 256;
 
 namespace VKEngine {
@@ -20,9 +26,9 @@ namespace VKEngine {
     
     void handle_keys(Key key, bool bIsPressed)
     {
-      if (key > KEY_AMOUNT - 1)
+      if (KEY_MASK(key) > KEY_AMOUNT - 1)
         return;
-      _isPressed[key] = _isPressing[key] = bIsPressed;
+      _isPressed[KEY_MASK(key)] = _isPressing[KEY_MASK(key)] = bIsPressed;
     }
     
     void reset()

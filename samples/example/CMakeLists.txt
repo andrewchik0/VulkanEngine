@@ -15,13 +15,14 @@ if(NOT WIN32)
 endif()
 
 # Linking with core
-target_link_libraries(Example EngineCore)
+target_link_libraries(Example PUBLIC EngineCore SDL2::SDL2)
 
-# Set default working directory for Xcode IDE
+# Setup for IDE
 set_target_properties(Example
   PROPERTIES
     XCODE_GENERATE_SCHEME TRUE
     XCODE_SCHEME_WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     MSVC_RUNTIME_LIBRARY "MultiThreadedDLL"
+    BUILD_RPATH "/Library/Frameworks"
 )

@@ -3,6 +3,7 @@
 #include <functional>
 
 #include "input.h"
+#include "keycodes.h"
 #include "../engine/types.h"
 
 namespace VKEngine {
@@ -11,6 +12,11 @@ namespace VKEngine {
   {
   public:
     Input _input;
+    
+    ~Window()
+    {
+      
+    }
 
     virtual void init(std::function<void()>&& mainloopFunction, std::function<void()>&& recreateFunction) = 0;
     virtual void run() = 0;
@@ -24,6 +30,7 @@ namespace VKEngine {
     VkExtent2D ext() { return _windowExtent; }
 
     static std::unique_ptr<Window> create_window();
+    static void delete_window(std::unique_ptr<Window>& window);
 
   protected:
     std::function<void()> _mainloopFunction;

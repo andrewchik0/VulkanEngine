@@ -1,6 +1,6 @@
 #include "sdl_window.h"
 
-#ifdef PLATFORM_UNIX
+#ifdef USE_SDL
 
 namespace VKEngine {
 
@@ -49,17 +49,17 @@ namespace VKEngine {
           break;
         case SDL_KEYDOWN:
         case SDL_KEYUP:
-          _keyboard.handle(e.key);
+          _input.handle_keys(e.key.keysym.sym, e.key.type == SDL_KEYDOWN);
           break;
         case SDL_MOUSEMOTION:
-          _mouse.handle(e.motion);
+          _input.handle_mousemotion(e.motion.x, e.motion.y, e.motion.xrel, e.motion.yrel);
           break;
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
-          _mouse.handle(e.button);
+          _input.handle_keys(e.button.button, e.button.state == SDL_PRESSED);
           break;
         case SDL_MOUSEWHEEL:
-          _mouse.handle(e.wheel);
+          _input.handle_mousewheel(e.wheel.x, e.wheel.y);
           break;
         }
       }
@@ -69,8 +69,7 @@ namespace VKEngine {
 
       _mainloopFunction();
 
-      _mouse.reset();
-      _keyboard.reset();
+      _input.reset();
     }
   }
 
@@ -90,7 +89,11 @@ namespace VKEngine {
 
     SDL_ShowCursor(_bIsCursorHided ? SDL_DISABLE : SDL_ENABLE);
   }
+  
+  void SDLWindow::go_fullscreen()
+  {
+  }
 
 }
 
-#endif // PLATFORM_UNIX
+#endif // USE_SDL

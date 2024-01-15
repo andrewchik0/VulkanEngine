@@ -22,6 +22,3 @@
   #error "Unknown platform"
 #endif
 
-#if defined(USE_SDL)
-  #include <SDL2/SDL.h>
-#endif // USE_SDL

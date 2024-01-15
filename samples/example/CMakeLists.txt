@@ -9,10 +9,6 @@ target_include_directories(Example SYSTEM PRIVATE ${PROJECT_SOURCE_DIR}/engine-c
 target_include_directories(Example SYSTEM PRIVATE ${PROJECT_SOURCE_DIR}/engine-core/third_party/glm)
 find_package(Vulkan REQUIRED)
 target_include_directories(Example SYSTEM PRIVATE ${Vulkan_INCLUDE_DIRS})
-if(NOT WIN32)
-  find_package(SDL2 REQUIRED)
-  target_include_directories(Example SYSTEM PRIVATE ${SDL2_INCLUDE_DIRS})
-endif()
 
 # Linking with core
 target_link_libraries(Example PUBLIC EngineCore)

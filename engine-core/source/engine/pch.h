@@ -12,9 +12,6 @@
 #include <map>
 
 #include <vulkan/vulkan.hpp>
-#if defined(USE_SDL)
-  #include <SDL2/SDL_vulkan.h>
-#endif // USE_SDL
 #ifdef PLATFORM_WINDOWS
   #include <vulkan/vulkan_win32.h>
 #endif // PLATFORM_WINDOWS

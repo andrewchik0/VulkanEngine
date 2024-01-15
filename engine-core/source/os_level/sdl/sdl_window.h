@@ -4,6 +4,8 @@
 
 #ifdef USE_SDL
 
+struct SDL_Window;
+
 namespace VKEngine {
 
   class SDLWindow : public Window
@@ -17,7 +19,7 @@ namespace VKEngine {
     void go_fullscreen() override;
 
   private:
-    SDL_Window* _window;
+    SDL_Window* _window{ nullptr };
   };
 }
 

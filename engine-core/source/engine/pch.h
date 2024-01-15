@@ -12,10 +12,6 @@
 #include <map>
 
 #include <vulkan/vulkan.hpp>
-#ifdef PLATFORM_WINDOWS
-  #include <vulkan/vulkan_win32.h>
-#endif // PLATFORM_WINDOWS
-
 #include <vk_mem_alloc/vk_mem_alloc.h>
 
 #include <glm/glm.hpp>

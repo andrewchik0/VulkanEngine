@@ -3,6 +3,7 @@
 #ifdef PLATFORM_WINDOWS
 
 #include <windowsx.h>
+#include <vulkan/vulkan_win32.h>
 
 #include "../../engine/engine.h"
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <VkBootstrap/VkBootstrap.h>
 #include "../types.h"
 
 namespace VKEngine {

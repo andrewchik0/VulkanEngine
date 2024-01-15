@@ -15,7 +15,7 @@ if(NOT WIN32)
 endif()
 
 # Linking with core
-target_link_libraries(Example PUBLIC EngineCore SDL2::SDL2)
+target_link_libraries(Example PUBLIC EngineCore)
 
 # Setup for IDE
 set_target_properties(Example

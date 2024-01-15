@@ -8,7 +8,7 @@
 
 namespace VKEngine {
 
-  void WindowsWindow::init(std::function<void()>&& mainloopFunction, std::function<void()>&& recreateFunction)
+  void WindowsWindow::init(ApplicationSpecs specs, std::function<void()>&& mainloopFunction, std::function<void()>&& recreateFunction)
   {
     _mainloopFunction = mainloopFunction;
     _recreateFunction = recreateFunction;
@@ -30,7 +30,7 @@ namespace VKEngine {
     _hWnd = CreateWindowEx(
       0,
       CLASS_NAME,
-      "Learn to Program Windows",
+      specs.name.c_str(),
       WS_OVERLAPPEDWINDOW,
 
       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,

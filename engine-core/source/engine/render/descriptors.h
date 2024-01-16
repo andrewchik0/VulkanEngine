@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../types.h"
-#include "vulkan.h"
+#include "vk_state.h"
 #include "gpu_data.h"
 
 namespace VKEngine {

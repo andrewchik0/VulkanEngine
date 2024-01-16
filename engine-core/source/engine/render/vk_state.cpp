@@ -3,7 +3,7 @@
 
 #include <VkBootstrap/VkBootstrap.h>
 
-#include "vulkan.h"
+#include "vk_state.h"
 #include "../engine.h"
 
 namespace VKEngine {

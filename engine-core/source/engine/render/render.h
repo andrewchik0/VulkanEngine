@@ -2,7 +2,7 @@
 
 #include "resources/resources.h"
 
-#include "vulkan.h"
+#include "vk_state.h"
 #include "frames.h"
 #include "swapchain_handler.h"
 #include "render_passes.h"

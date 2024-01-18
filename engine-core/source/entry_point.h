@@ -3,11 +3,6 @@
 #include "engine/engine.h"
 
 namespace VKEngine {
-  struct CommandLineArgs
-  {
-    size_t count;
-    char** vector;
-  };
   
   ApplicationSpecs create_app(CommandLineArgs args);
   

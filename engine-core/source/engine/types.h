@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pch.h"
+#include "engine/pch.h"
 
 #ifdef _DEBUG
   #define VK_CHECK(x)                                               \
@@ -33,4 +33,9 @@ namespace VKEngine {
     VmaAllocation allocation;
   };
   
+  struct CommandLineArgs
+  {
+    size_t count;
+    char** vector;
+  };
 }

@@ -6,7 +6,7 @@ namespace VKEngine {
   
   typedef uint32_t Key;
 
-  enum KeyCodes : Key
+  enum class KeyCodes : Key
   {
 #ifdef PLATFORM_WINDOWS
 

@@ -32,6 +32,7 @@ namespace VKEngine {
     _render.cleanup();
     _window.get()->cleanup();
     Window::delete_window(_window);
+    _fileWatchers.terminate();
   }
   
   void Engine::recreate()

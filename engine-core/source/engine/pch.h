@@ -9,7 +9,9 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <map>
+#include <set>
 
 #include <vulkan/vulkan.hpp>
 #include <vk_mem_alloc/vk_mem_alloc.h>

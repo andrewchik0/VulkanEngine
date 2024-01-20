@@ -266,7 +266,7 @@ namespace VKEngine {
       if (!std::filesystem::exists(data.get_full_filename()))
         return nullptr;
       
-      Engine::get()->file_watchers().add_watcher(data.get_full_filename(), [=]{
+      add_file_watcher_debug_only(data.get_full_filename(), [=]{
         _render->get_vk_state().wait();
         reload(name);
       });

@@ -17,3 +17,10 @@ void __engine_assert(bool bExpr, const char* message, const char* file, uint32_t
   #define assert_if_not(condition, message)
   #define assert_msg(message)
 #endif
+
+#define add_file_watcher(file, function) (Engine::get()->file_watchers().add_watcher((file), (function)))
+#ifndef NDEBUG
+  #define add_file_watcher_debug_only(file, function) (Engine::get()->file_watchers().add_watcher((file), (function)))
+#else
+  #define add_file_watcher_debug_only(file, function)
+#endif

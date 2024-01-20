@@ -51,7 +51,7 @@ namespace VKEngine::Utils {
     }
     
     template <typename F, typename R = std::invoke_result_t<F>>
-    std::future<R> enqueue(const F& job)
+    [[nodiscard("send_task function should be used if future object is not needed")]] std::future<R> enqueue(const F& job)
     {
       std::shared_ptr<std::promise<R>> promise = std::make_shared<std::promise<R>>();
       {
@@ -68,6 +68,15 @@ namespace VKEngine::Utils {
       }
       _mutexCondition.notify_one();
       return promise->get_future();
+    }
+    
+    void send_task(const std::function<void()>& job)
+    {
+      {
+        std::unique_lock<std::mutex> lock(_queueMutex);
+        _jobs.push(job);
+      }
+      _mutexCondition.notify_one();
     }
     
     bool is_busy()

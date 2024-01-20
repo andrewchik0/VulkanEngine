@@ -33,7 +33,8 @@ namespace VKEngine::math {
     return a > b ? b : a;
   }
   
-  inline float clamp(float v, float min, float max)
+  template<typename T>
+  inline T clamp(T v, T min, T max)
   {
     return v < min ?
     min :

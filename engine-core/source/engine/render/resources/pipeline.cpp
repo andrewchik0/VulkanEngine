@@ -1,8 +1,8 @@
 #include <fstream>
 #include <sstream>
 
-#include "pipeline.h"
-#include "../../engine.h"
+#include "engine/render/resources/pipeline.h"
+#include "engine/engine.h"
 
 namespace VKEngine {
   
@@ -266,7 +266,7 @@ namespace VKEngine {
       if (!std::filesystem::exists(data.get_full_filename()))
         return nullptr;
       
-      Engine::get()->file_watchers().add_watcher(data.get_full_filename(), [=](){
+      Engine::get()->file_watchers().add_watcher(data.get_full_filename(), [=]{
         _render->get_vk_state().wait();
         reload(name);
       });

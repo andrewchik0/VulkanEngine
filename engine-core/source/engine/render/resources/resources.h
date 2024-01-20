@@ -1,6 +1,6 @@
 #pragma once
 
-#include "materials.h"
-#include "textures.h"
-#include "pipeline.h"
-#include "mesh.h"
+#include "engine/render/resources/materials.h"
+#include "engine/render/resources/textures.h"
+#include "engine/render/resources/pipeline.h"
+#include "engine/render/resources/mesh.h"

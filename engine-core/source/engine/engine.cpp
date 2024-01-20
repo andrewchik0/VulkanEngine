@@ -1,4 +1,4 @@
-#include "engine.h"
+#include "engine/engine.h"
 
 namespace VKEngine {
   
@@ -14,6 +14,12 @@ namespace VKEngine {
     _render.init(&_window.get()->width(), &_window.get()->height());
     
     init_scene();
+    
+    {
+      using namespace std::chrono_literals;
+      _fileWatchers.set_delay(200ms);
+    }
+    _fileWatchers.run_on_separate_thread();
     
     _bIsInitialized = true;
   }
@@ -39,7 +45,6 @@ namespace VKEngine {
   
   void Engine::draw()
   {
-    _fileWatchers.tick();
     _camera.handle();
     
     _render.draw();
@@ -64,12 +69,6 @@ namespace VKEngine {
     vertices[1].color = { 0.f, 0.f, 1.0f };
     vertices[2].color = { 1.f, 0.f, 0.0f };
     
-    auto path = std::filesystem::current_path();
-
-    _render._meshes.create("monkey", "assets/monkey_smooth.obj");
-    _render._meshes.create("empire", "assets/lost_empire.obj");
-    _render._meshes.create("triangle", vertices);
-    
     std::vector<ShaderData> defaultData =
     {
       { "tri_mesh_ssbo", SHADER_VERTEX },
@@ -89,6 +88,10 @@ namespace VKEngine {
     _render._textures.create("empire_diffuse", "assets/lost_empire-RGBA.png");
     _render._materials["texturedmesh"]->texture = _render._textures["empire_diffuse"];
     
+    _render._meshes.create("monkey", "assets/monkey_smooth.obj");
+    _render._meshes.create("empire", "assets/lost_empire.obj");
+    _render._meshes.create("triangle", vertices);
+    
     RenderObject monkey;
     monkey.mesh = _render._meshes["monkey"];
     monkey.material = _render._materials["defaultmesh"];
@@ -104,9 +107,9 @@ namespace VKEngine {
     
     _render.add_object(map);
     
-    for (int32_t x = -20; x <= 20; x++) {
-      for (int32_t y = -20; y <= 20; y++) {
-        
+    for (int32_t x = -20; x <= 20; x++)
+      for (int32_t y = -20; y <= 20; y++)
+      {
         RenderObject tri;
         tri.mesh = _render._meshes["triangle"];
         tri.material = _render._materials["defaultmesh"];
@@ -117,7 +120,6 @@ namespace VKEngine {
         
         _render.add_object(tri);
       }
-    }
   }
   
 }

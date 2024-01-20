@@ -2,8 +2,8 @@
 
 #include <shaderc/shaderc.hpp>
 
-#include "resource_manager.h"
-#include "../gpu_data.h"
+#include "engine/render/resources/resource_manager.h"
+#include "engine/render/gpu_data.h"
 
 #define SHADER_VERTEX shaderc_glsl_vertex_shader
 #define SHADER_FRAGMENT shaderc_glsl_fragment_shader

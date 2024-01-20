@@ -5,7 +5,7 @@
 #include <windowsx.h>
 #include <vulkan/vulkan_win32.h>
 
-#include "../../engine/engine.h"
+#include "engine/engine.h"
 
 namespace VKEngine {
 

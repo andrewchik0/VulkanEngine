@@ -1,5 +1,5 @@
-#include "free_camera.h"
-#include "engine.h"
+#include "engine/free_camera.h"
+#include "engine/engine.h"
 
 namespace VKEngine {
   

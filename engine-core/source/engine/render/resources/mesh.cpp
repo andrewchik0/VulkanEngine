@@ -2,8 +2,8 @@
 
 #include <tiny_obj_loader/tiny_obj_loader.h>
 
-#include "mesh.h"
-#include "../../engine.h"
+#include "engine/render/resources/mesh.h"
+#include "engine/engine.h"
 
 namespace VKEngine {
   
@@ -122,10 +122,13 @@ namespace VKEngine {
   Mesh* Meshes::create(const std::string &name, const std::string &filename)
   {
     Mesh mesh;
-    if (!mesh.load_from_obj(filename))
+    auto future = Engine::get()->thread_pool().enqueue([&mesh, &filename]() {
+      return mesh.load_from_obj(filename);
+    });
+    future.wait();
+    if (!future.get())
       return nullptr;
     upload_mesh(mesh);
-    // mesh.vertices.clear();
     return &(_resources[name] = mesh);
   }
   

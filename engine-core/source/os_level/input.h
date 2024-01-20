@@ -1,7 +1,7 @@
 #pragma once
 
-#include "keycodes.h"
-#include "../engine/utils/math/math.h"
+#include "os_level/keycodes.h"
+#include "engine/utils/math/math.h"
 
 #ifdef USE_SDL
   #define KEY_MASK(x) ((x) & ~(1 << 30))

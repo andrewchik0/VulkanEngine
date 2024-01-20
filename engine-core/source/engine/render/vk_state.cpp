@@ -3,8 +3,8 @@
 
 #include <VkBootstrap/VkBootstrap.h>
 
-#include "vk_state.h"
-#include "../engine.h"
+#include "engine/render/vk_state.h"
+#include "engine/engine.h"
 
 namespace VKEngine {
   void VkState::init()

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "resources/resources.h"
+#include "engine/render/resources/resources.h"
 
-#include "vk_state.h"
-#include "frames.h"
-#include "swapchain_handler.h"
-#include "render_passes.h"
-#include "upload_context.h"
-#include "descriptors.h"
+#include "engine/render/vk_state.h"
+#include "engine/render/frames.h"
+#include "engine/render/swapchain_handler.h"
+#include "engine/render/render_passes.h"
+#include "engine/render/upload_context.h"
+#include "engine/render/descriptors.h"
 
 namespace VKEngine {
   

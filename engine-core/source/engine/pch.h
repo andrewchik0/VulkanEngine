@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../os_level/platform.h"
+#include "os_level/platform.h"
 
 #include <iostream>
 #include <memory>
@@ -20,6 +20,7 @@
 #include "utils/math/math.h"
 #include "utils/file_watcher.h"
 #include "utils/time_handler.h"
+#include "utils/thread_pool.h"
 #include "utils/macros.h"
 
 // Handle mamory leaks in debug mode

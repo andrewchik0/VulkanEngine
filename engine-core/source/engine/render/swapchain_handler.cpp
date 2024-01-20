@@ -1,8 +1,8 @@
 #include <VkBootstrap/VkBootstrap.h>
 
-#include "swapchain_handler.h"
-#include "../engine.h"
-#include "vk_info_initializers.h"
+#include "engine/render/swapchain_handler.h"
+#include "engine/engine.h"
+#include "engine/render/vk_info_initializers.h"
 
 namespace VKEngine {
   

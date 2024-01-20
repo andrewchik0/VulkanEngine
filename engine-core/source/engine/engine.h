@@ -1,8 +1,8 @@
 #pragma once
 
-#include "free_camera.h"
-#include "../os_level/window.h"
-#include "render/render.h"
+#include "engine/free_camera.h"
+#include "os_level/window.h"
+#include "engine/render/render.h"
 
 namespace VKEngine {
   
@@ -14,6 +14,8 @@ namespace VKEngine {
   class Engine {
   public:
     
+    Engine() : _fileWatchers(&this->_threadPool) {}
+    
     void init(ApplicationSpecs specs);
     void cleanup();
     void recreate();
@@ -24,9 +26,11 @@ namespace VKEngine {
     
     inline Camera& camera() { return _camera; }
     inline Window& window() { return *_window.get(); }
+    inline Render& render() { return _render; }
+    
     inline Utils::TimeHandler& time() { return _timeHandler; }
     inline Utils::FileWatchers& file_watchers() { return _fileWatchers; }
-    inline Render& render() { return _render; }
+    inline Utils::ThreadPool& thread_pool() { return _threadPool; }
 
   private:
     static Engine* s_instance;
@@ -36,9 +40,11 @@ namespace VKEngine {
     FreeCamera _camera;
     
     std::unique_ptr<Window> _window;
+    Render _render;
+    
     Utils::TimeHandler _timeHandler;
     Utils::FileWatchers _fileWatchers;
-    Render _render;
+    Utils::ThreadPool _threadPool;
     
     void init_scene();
   };

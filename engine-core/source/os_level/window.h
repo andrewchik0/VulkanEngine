@@ -2,9 +2,9 @@
 
 #include <functional>
 
-#include "input.h"
-#include "keycodes.h"
-#include "../engine/types.h"
+#include "os_level/input.h"
+#include "os_level/keycodes.h"
+#include "engine/types.h"
 
 namespace VKEngine {
 
@@ -12,6 +12,8 @@ namespace VKEngine {
   {
   public:
     Input _input;
+    
+    virtual ~Window() = default;
     
     virtual void init(ApplicationSpecs specs, std::function<void()>&& mainloopFunction, std::function<void()>&& recreateFunction) = 0;
     virtual void run() = 0;

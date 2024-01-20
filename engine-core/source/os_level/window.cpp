@@ -1,11 +1,11 @@
 #include "window.h"
 
 #ifdef USE_SDL
-#include "../os_level/sdl/sdl_window.h"
+#include "os_level/sdl/sdl_window.h"
 #endif // USE_SDL
 
 #ifdef PLATFORM_WINDOWS
-#include "../os_level/windows/windows_window.h"
+#include "os_level/windows/windows_window.h"
 #endif // PLATFORM_WINDOWS
 
 namespace VKEngine

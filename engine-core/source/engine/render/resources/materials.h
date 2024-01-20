@@ -1,7 +1,7 @@
 #pragma once
 
-#include "pipeline.h"
-#include "textures.h"
+#include "engine/render/resources/pipeline.h"
+#include "engine/render/resources/textures.h"
 
 namespace VKEngine {
   

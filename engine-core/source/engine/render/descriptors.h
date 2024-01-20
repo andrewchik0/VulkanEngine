@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../types.h"
-#include "vk_state.h"
-#include "gpu_data.h"
+#include "engine/types.h"
+#include "engine/render/vk_state.h"
+#include "engine/render/gpu_data.h"
 
 namespace VKEngine {
   

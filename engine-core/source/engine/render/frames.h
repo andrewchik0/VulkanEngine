@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../utils/function_queue.h"
-#include "vk_info_initializers.h"
-#include "swapchain_handler.h"
-#include "render_passes.h"
-#include "descriptors.h"
+#include "engine/utils/function_queue.h"
+#include "engine/render/vk_info_initializers.h"
+#include "engine/render/swapchain_handler.h"
+#include "engine/render/render_passes.h"
+#include "engine/render/descriptors.h"
 
 namespace VKEngine {
   

@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "spherical_vec.h"
+#include "engine/utils/math/spherical_vec.h"
 
 namespace VKEngine::math {
   

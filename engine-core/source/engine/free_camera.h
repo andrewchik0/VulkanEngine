@@ -1,7 +1,6 @@
 #pragma once
 
-#include "camera.h"
-#include "../os_level/input.h"
+#include "engine/camera.h"
 
 namespace VKEngine {
   

@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_vulkan.h>
 
-#include "../../engine/engine.h"
+#include "engine/engine.h"
 
 namespace VKEngine {
 
@@ -44,7 +44,7 @@ namespace VKEngine {
         case SDL_WINDOWEVENT:
           if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_EXPOSED)
           {
-            int w, h;
+            int32_t w, h;
             SDL_GetWindowSize(_window, &w, &h);
             _windowExtent.width = w;
             _windowExtent.height = h;

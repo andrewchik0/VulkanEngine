@@ -1,7 +1,7 @@
 #pragma once
 
-#include "resource_manager.h"
-#include "vertex.h"
+#include "engine/render/resources/resource_manager.h"
+#include "engine/render/resources/vertex.h"
 
 namespace VKEngine {
   

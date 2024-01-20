@@ -1,6 +1,6 @@
 #pragma once
 
-#include "resource_manager.h"
+#include "engine/render/resources/resource_manager.h"
 
 namespace VKEngine {
   

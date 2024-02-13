@@ -10,3 +10,8 @@ void __engine_assert(bool bExpr, const char* message, const char* file, uint32_t
     abort();
   }
 }
+
+void __engine_assert(bool bExpr, const std::string& message, const char* file, uint32_t line)
+{
+  __engine_assert(bExpr, message.c_str(), file, line);
+}

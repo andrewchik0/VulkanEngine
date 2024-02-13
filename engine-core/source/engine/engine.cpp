@@ -60,37 +60,57 @@ namespace VKEngine {
   
   void Engine::init_scene()
   {
-    std::vector<Vertex> vertices(3);
+    _render._frames.set_clear_value({ 0.4, 0.5, 1, 1 });
+    Vertices vertices;
     
-    vertices[0].position = {  1.f,  1.f, 0.0f };
-    vertices[1].position = { -1.f,  1.f, 0.0f };
-    vertices[2].position = {  0.f, -1.f, 0.0f };
-    
-    vertices[0].color = { 0.f, 1.f, 0.0f };
-    vertices[1].color = { 0.f, 0.f, 1.0f };
-    vertices[2].color = { 1.f, 0.f, 0.0f };
-    
-    std::vector<ShaderData> defaultData =
+    vertices.positions =
     {
-      { "tri_mesh_ssbo", SHADER_VERTEX },
-      { "default_lit", SHADER_FRAGMENT },
+      {  1.f,  1.f, 0.0f },
+      { -1.f,  1.f, 0.0f },
+      {  0.f, -1.f, 0.0f },
     };
-    std::vector<ShaderData> texturedData =
+    
+    vertices.colors =
     {
-      { "tri_mesh_ssbo", SHADER_VERTEX },
-      { "textured_lit", SHADER_FRAGMENT },
+      { 0.f, 1.f, 0.0f },
+      { 0.f, 0.f, 1.0f },
+      { 1.f, 0.f, 0.0f },
     };
-    _render._pipelines.create("default", defaultData);
-    _render._pipelines.create("textured", texturedData);
+    
+    vertices.normals =
+    {
+      { 1.f, 1.f, 1.0f },
+      { 0.f, 0.f, 1.0f },
+      { 1.f, 0.f, 0.0f },
+    };
+    
+    VertexInputDescription vertexTexturedDesc = VertexInputDescriptionBuilder()
+      .float3()
+      .float3()
+      .float2()
+      .build();
+    
+    std::vector<ShaderInfo> defaultInfo =
+    {
+      { "default", SHADER_VERTEX, vertices.build_vertex_desc() },
+      { "default", SHADER_FRAGMENT },
+    };
+    std::vector<ShaderInfo> texturedInfo =
+    {
+      { "textured", SHADER_VERTEX, vertexTexturedDesc },
+      { "textured", SHADER_FRAGMENT },
+    };
+    _render._pipelines.create("default", defaultInfo);
+    _render._pipelines.create("textured", texturedInfo);
     
     _render._materials.create("defaultmesh", _render._pipelines["default"]);
     _render._materials.create("texturedmesh", _render._pipelines["textured"]);
     
-    _render._textures.create("empire_diffuse", "assets/lost_empire-RGBA.png");
+    _render._textures.create_from_file("empire_diffuse", "assets/lost_empire-RGBA.png");
     _render._materials["texturedmesh"]->texture = _render._textures["empire_diffuse"];
     
     _render._meshes.create("monkey", "assets/monkey_smooth.obj");
-    _render._meshes.create("empire", "assets/lost_empire.obj");
+    _render._meshes.create("empire", "assets/lost_empire.obj", true);
     _render._meshes.create("triangle", vertices);
     
     RenderObject monkey;

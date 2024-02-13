@@ -7,7 +7,7 @@
 
 namespace VKEngine {
   
-  bool Mesh::load_from_obj(const std::string& filename)
+  bool Mesh::load_from_obj(const std::string& filename, bool bUseTexture /*= false*/)
   {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
@@ -43,26 +43,20 @@ namespace VKEngine {
           tinyobj::real_t ux = attrib.texcoords[2 * idx.texcoord_index + 0];
           tinyobj::real_t uy = attrib.texcoords[2 * idx.texcoord_index + 1];
           
-          Vertex new_vert;
-          new_vert.position.x = vx;
-          new_vert.position.y = vy;
-          new_vert.position.z = vz;
+          tinyobj::real_t r = attrib.colors[3 * idx.vertex_index + 0];
+          tinyobj::real_t g = attrib.colors[3 * idx.vertex_index + 1];
+          tinyobj::real_t b = attrib.colors[3 * idx.vertex_index + 2];
           
-          new_vert.normal.x = nx;
-          new_vert.normal.y = ny;
-          new_vert.normal.z = nz;
+          vertices.positions.push_back({vx, vy, vz});
+          vertices.normals.push_back({nx, ny, nz});
           
-          new_vert.color = glm::vec4(1.0);
-          
-          new_vert.uv.x = ux;
-          new_vert.uv.y = 1 - uy;
-          
-          vertices.push_back(new_vert);
+          bUseTexture ?
+            vertices.texuvs.push_back({ux, 1 - uy}) :
+            vertices.colors.push_back({r, g, b});
         }
         index_offset += 3;
       }
     }
-    
     return true;
   }
   
@@ -73,11 +67,11 @@ namespace VKEngine {
 
   void Meshes::upload_mesh(Mesh& mesh)
   {
-    const size_t bufferSize = mesh.vertices.size() * sizeof(Vertex);
+    RawBuffer packedVertices = mesh.vertices.pack();
     VkBufferCreateInfo stagingBufferInfo = {};
     stagingBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     stagingBufferInfo.pNext = nullptr;
-    stagingBufferInfo.size = bufferSize;
+    stagingBufferInfo.size = packedVertices.size;
     stagingBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
     
     VmaAllocationCreateInfo vmaallocInfo = {};
@@ -90,15 +84,12 @@ namespace VKEngine {
                              &stagingBuffer.allocation,
                              nullptr));
     
-    void* data;
-    vmaMapMemory(_render->get_vk_state().allocator, stagingBuffer.allocation, &data);
-    memcpy(data, mesh.vertices.data(), mesh.vertices.size() * sizeof(Vertex));
-    vmaUnmapMemory(_render->get_vk_state().allocator, stagingBuffer.allocation);
+    stagingBuffer.map(packedVertices);
     
     VkBufferCreateInfo vertexBufferInfo = {};
     vertexBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     vertexBufferInfo.pNext = nullptr;
-    vertexBufferInfo.size = bufferSize;
+    vertexBufferInfo.size = packedVertices.size;
     vertexBufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
     
     vmaallocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
@@ -108,22 +99,22 @@ namespace VKEngine {
                              &mesh.vertexBuffer.allocation,
                              nullptr));
     
-    _render->_uploadContext.immediate_submit([=](VkCommandBuffer cmd) {
+    _render->_uploadContext.immediate_submit([=, &packedVertices](VkCommandBuffer cmd) {
       VkBufferCopy copy;
       copy.dstOffset = 0;
       copy.srcOffset = 0;
-      copy.size = bufferSize;
+      copy.size = packedVertices.size;
       vkCmdCopyBuffer(cmd, stagingBuffer.buffer, mesh.vertexBuffer.buffer, 1, &copy);
     });
     
     vmaDestroyBuffer(_render->get_vk_state().allocator, stagingBuffer.buffer, stagingBuffer.allocation);
   }
   
-  Mesh* Meshes::create(const std::string &name, const std::string &filename)
+  Mesh* Meshes::create(const std::string &name, const std::string &filename, bool bUseTexture /*= false*/)
   {
     Mesh mesh;
-    auto future = Engine::get()->thread_pool().enqueue([&mesh, &filename]() {
-      return mesh.load_from_obj(filename);
+    auto future = Engine::get()->thread_pool().enqueue([&mesh, &filename, bUseTexture]() {
+      return mesh.load_from_obj(filename, bUseTexture);
     });
     future.wait();
     if (!future.get())
@@ -132,12 +123,11 @@ namespace VKEngine {
     return &(_resources[name] = mesh);
   }
   
-  Mesh* Meshes::create(const std::string &name, const std::vector<Vertex>& vertices)
+  Mesh* Meshes::create(const std::string &name, const Vertices& vertices)
   {
     Mesh mesh;
     mesh.vertices = vertices;
     upload_mesh(mesh);
-    mesh.vertices.clear();
     return &(_resources[name] = mesh);
   }
 }

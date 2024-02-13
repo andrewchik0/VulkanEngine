@@ -32,18 +32,31 @@ namespace VKEngine {
       .value();
     
     vkb::DeviceBuilder deviceBuilder{ physicalDevice };
-    VkPhysicalDeviceShaderDrawParametersFeatures shader_draw_parameters_features = {};
-    shader_draw_parameters_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES;
-    shader_draw_parameters_features.pNext = nullptr;
-    shader_draw_parameters_features.shaderDrawParameters = VK_TRUE;
-    vkb::Device vkbDevice = deviceBuilder.add_pNext(&shader_draw_parameters_features).build().value();
+    
+    VkPhysicalDeviceShaderDrawParametersFeatures shaderDrawParametersFeatures = {};
+    shaderDrawParametersFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES;
+    shaderDrawParametersFeatures.pNext = nullptr;
+    shaderDrawParametersFeatures.shaderDrawParameters = VK_TRUE;
+    
+    vkb::Device vkbDevice = deviceBuilder
+        .add_pNext(&shaderDrawParametersFeatures)
+        .build()
+        .value();
     
     device = vkbDevice.device;
     chosenGPU = physicalDevice.physical_device;
     
+    // Extensions check
+    uint32_t extensionsCount = 0;
+    VK_CHECK(vkEnumerateDeviceExtensionProperties(chosenGPU, nullptr, &extensionsCount, nullptr));
+    availableExtentions.resize(extensionsCount);
+    VK_CHECK(vkEnumerateDeviceExtensionProperties(chosenGPU, nullptr, &extensionsCount, &availableExtentions[0]));
+    
+    // Get queue
     graphicsQueue = vkbDevice.get_queue(vkb::QueueType::graphics).value();
     graphicsQueueFamily = vkbDevice.get_queue_index(vkb::QueueType::graphics).value();
     
+    // Create VMA Allocator
     VmaAllocatorCreateInfo allocatorInfo = {};
     allocatorInfo.physicalDevice = chosenGPU;
     allocatorInfo.device = device;
@@ -66,4 +79,20 @@ namespace VKEngine {
   }
   
   void VkState::wait() { vkDeviceWaitIdle(device); }
+  
+  bool VkState::is_extention_available(const std::string& extName)
+  {
+    for (auto& ext : availableExtentions)
+      if (ext.extensionName == extName)
+        return true;
+    return false;
+  }
+  
+  void AllocatedBuffer::map(void* data, size_t size)
+  {
+    void *newData;
+    vmaMapMemory(Engine::get()->render().get_vk_state().allocator, allocation, &newData);
+    memcpy(newData, data, size);
+    vmaUnmapMemory(Engine::get()->render().get_vk_state().allocator, allocation);
+  }
 }

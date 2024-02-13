@@ -4,6 +4,27 @@
 
 namespace VKEngine {
   
+  class ImageType
+  {
+  public:
+    enum Type
+    {
+      RGB,
+      RGBA,
+    };
+    
+    ImageType(Type type)
+      : _type(type)
+    {}
+    
+    uint32_t to_stb_enum();
+    VkFormat to_vk_enum();
+    uint8_t get_pixel_size();
+    
+  private:
+    Type _type;
+  };
+  
   struct Texture : public IResource
   {
     VkDescriptorSet descriptorsSet{ VK_NULL_HANDLE };
@@ -18,10 +39,10 @@ namespace VKEngine {
   class Textures : public ResourceManager<std::string, Texture>
   {
   public:
-    Texture* create(const std::string& name, const std::string& filename) { return &(_resources[name] = load_from_file(filename)); }
-
+    Texture* create_from_file(const std::string& name, const std::string& filename, ImageType type = ImageType::RGBA);
+    Texture* create_from_memory(const std::string& name, const RawBuffer& buffer, uint32_t width, uint32_t height, ImageType type = ImageType::RGBA);
+    
   private:
-    Texture load_from_file(const std::string& filename);
   };
   
 }

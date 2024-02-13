@@ -9,7 +9,9 @@
 // Custom assertion
 #include <cassert>
 #include <iostream>
+#include <string>
 void __engine_assert(bool bExpr, const char* message, const char* file, uint32_t line);
+void __engine_assert(bool bExpr, const std::string& message, const char* file, uint32_t line);
 #ifndef NDEBUG
   #define assert_if_not(condition, message) (__engine_assert(condition, message, __FILE__, __LINE__));
   #define assert_msg(message) assert_if_not(false, message);

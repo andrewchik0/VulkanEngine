@@ -133,7 +133,9 @@ namespace VKEngine::VKInit {
     info.pName = "main";
     return info;
   }
-  VkPipelineVertexInputStateCreateInfo vertex_input_state_create_info() {
+  
+  VkPipelineVertexInputStateCreateInfo vertex_input_state_create_info()
+  {
     VkPipelineVertexInputStateCreateInfo info = {};
     info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     info.pNext = nullptr;
@@ -154,6 +156,7 @@ namespace VKEngine::VKInit {
     info.primitiveRestartEnable = VK_FALSE;
     return info;
   }
+  
   VkPipelineRasterizationStateCreateInfo rasterization_state_create_info(VkPolygonMode polygonMode)
   {
     VkPipelineRasterizationStateCreateInfo info = {};
@@ -177,6 +180,7 @@ namespace VKEngine::VKInit {
     
     return info;
   }
+  
   VkPipelineMultisampleStateCreateInfo multisampling_state_create_info()
   {
     VkPipelineMultisampleStateCreateInfo info = {};
@@ -192,14 +196,18 @@ namespace VKEngine::VKInit {
     info.alphaToOneEnable = VK_FALSE;
     return info;
   }
-  VkPipelineColorBlendAttachmentState color_blend_attachment_state() {
+  
+  VkPipelineColorBlendAttachmentState color_blend_attachment_state()
+  {
     VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
     colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
     VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
     colorBlendAttachment.blendEnable = VK_FALSE;
     return colorBlendAttachment;
   }
-  VkPipelineLayoutCreateInfo pipeline_layout_create_info() {
+  
+  VkPipelineLayoutCreateInfo pipeline_layout_create_info()
+  {
     VkPipelineLayoutCreateInfo info{};
     info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     info.pNext = nullptr;
@@ -280,6 +288,7 @@ namespace VKEngine::VKInit {
     
     return setbind;
   }
+  
   VkWriteDescriptorSet write_descriptor_buffer(VkDescriptorType type, VkDescriptorSet dstSet, VkDescriptorBufferInfo* bufferInfo , uint32_t binding)
   {
     VkWriteDescriptorSet write = {};

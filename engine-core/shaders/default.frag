@@ -1,9 +1,8 @@
 #version 460
 
-layout (location = 0) in vec3 inColor;
-layout (location = 1) in vec2 texCoord;
-layout (location = 2) in vec3 inNormal;
-layout (location = 3) in vec3 inPosition;
+layout (location = 0) in vec3 inPosition;
+layout (location = 1) in vec3 inNormal;
+layout (location = 2) in vec3 inColor;
 
 layout (location = 0) out vec4 outFragColor;
 
@@ -26,19 +25,13 @@ layout(set = 1, binding = 0) uniform CameraData
   vec4 up;
 } cameraData;
 
-layout(set = 2, binding = 0) uniform ObjectData
-{
-  mat4 modelMatrix;
-} objectData;
-
-layout(set = 3, binding = 0) uniform sampler2D tex1;
 
 void main()
 {
   vec3 sunlight = normalize(vec3(1, 1, 0.5));
-  vec3 color = texture(tex1, texCoord).xyz;
-  
-  color *= max(dot(sunlight, inNormal), 0.4);
+  vec3 color = inColor;
+    
+  color *= max(dot(sunlight, inNormal), 0.1);
   
   outFragColor = vec4(color, 1.0f);
 }

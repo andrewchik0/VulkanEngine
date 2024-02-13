@@ -3,6 +3,7 @@
 #include <shaderc/shaderc.hpp>
 
 #include "engine/render/resources/resource_manager.h"
+#include "engine/render/resources/vertex.h"
 #include "engine/render/gpu_data.h"
 
 #define SHADER_VERTEX shaderc_glsl_vertex_shader
@@ -12,10 +13,11 @@ namespace VKEngine {
   
   typedef shaderc_shader_kind ShaderKind;
   
-  struct ShaderData
+  struct ShaderInfo
   {
     std::string filename;
     ShaderKind kind;
+    VertexInputDescription description;
     
     std::string get_full_filename() const
     {
@@ -65,13 +67,13 @@ namespace VKEngine {
   {
     VkPipeline pipeline{ VK_NULL_HANDLE };
     VkPipelineLayout layout{ VK_NULL_HANDLE };
-    std::vector<ShaderData> shaderData;
+    std::vector<ShaderInfo> shaderInfos;
     
     Pipeline() {}
-    Pipeline(VkPipeline pip, VkPipelineLayout pipelineLayout, const std::vector<ShaderData>& shaderData) :
+    Pipeline(VkPipeline pip, VkPipelineLayout pipelineLayout, const std::vector<ShaderInfo>& shaderData) :
       pipeline(pip),
       layout(pipelineLayout),
-      shaderData(shaderData)
+      shaderInfos(shaderData)
     {}
     
     void bind(VkCommandBuffer cmd) { vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline); }
@@ -90,23 +92,23 @@ namespace VKEngine {
     void reload(const std::string& name);
     void destroy();
     
-    Pipeline* create(const std::string& name, const std::vector<ShaderData>& shaderData);
-    Pipeline* create(const std::string& name, const std::string& filename);
+    Pipeline* create(const std::string& name, const std::vector<ShaderInfo>& shaderInfo);
+    Pipeline* create(const std::string& name, const std::string& filename, const VertexInputDescription& description);
 
   private:
     std::unordered_map<std::string, VkShaderModule> _loadedShaders;
     
     shaderc::Compiler _compiler;
     
-    bool load_shader_module(const ShaderData& shaderData, VkShaderModule* outShaderModule);
-    VkShaderModule* get_shader_module(const ShaderData& shaderData, bool useCache);
-    Pipeline* push(const std::string& name, VkPipeline pipeline, VkPipelineLayout layout, const std::vector<ShaderData>& shaderData);
+    bool load_shader_module(const ShaderInfo& shaderInfo, VkShaderModule* outShaderModule);
+    VkShaderModule* get_shader_module(const ShaderInfo& shaderInfo, bool useCache);
+    Pipeline* push(const std::string& name, VkPipeline pipeline, VkPipelineLayout layout, const std::vector<ShaderInfo>& shaderInfos);
     void clean_loaded_shaders();
     void clean_loaded_shader(const std::string& name);
     
-    bool build(const std::vector<ShaderData>& shaderData, Pipeline& pipeline, bool bUseCache = true);
+    bool build(const std::vector<ShaderInfo>& shaderInfos, Pipeline& pipeline, bool bUseCache = true);
 
-    std::vector<ShaderData> filename_to_shaderdata(const std::string& filename);
+    std::vector<ShaderInfo> filename_to_shaderdata(const std::string& filename, const VertexInputDescription& description);
   };
   
 }

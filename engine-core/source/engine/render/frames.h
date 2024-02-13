@@ -40,6 +40,8 @@ namespace VKEngine {
     
     void start();
     void end();
+    
+    void set_clear_value(VkClearColorValue clearValue) { _clearValue = clearValue; }
 
   private:
     VkState* _vkState;
@@ -50,7 +52,7 @@ namespace VKEngine {
     FrameData _frames[FRAME_OVERLAP];
     uint64_t _frameNumber{0};
     
-    VkClearColorValue _clearValue = {{ 0.2f, 0.2f, 0.2f, 0.2f }};
+    VkClearColorValue _clearValue = {{ 0.2f, 0.2f, 0.2f, 1.f }};
     uint32_t swapchainImageIndex;
   };
   

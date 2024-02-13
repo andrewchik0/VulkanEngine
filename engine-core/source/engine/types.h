@@ -24,18 +24,31 @@ namespace VKEngine {
 
   struct VkState;
   struct ApplicationSpecs;
+  
   class Engine;
   class Render;
-  
-  struct AllocatedBuffer
-  {
-    VkBuffer buffer;
-    VmaAllocation allocation;
-  };
   
   struct CommandLineArgs
   {
     size_t count;
     char** vector;
+  };
+  
+  struct RawBuffer
+  {
+    size_t size = 0;
+    void* data = nullptr;
+    
+    ~RawBuffer() { free(); }
+    void free() { if (data != nullptr) ::free(data); }
+  };
+  
+  struct AllocatedBuffer
+  {
+    VkBuffer buffer;
+    VmaAllocation allocation;
+    
+    void map(void* data, size_t size);
+    void map(const RawBuffer& memory) { map(memory.data, memory.size); }
   };
 }

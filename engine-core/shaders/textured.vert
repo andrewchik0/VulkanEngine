@@ -2,13 +2,11 @@
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vNormal;
-layout (location = 2) in vec3 vColor;
-layout (location = 3) in vec2 vTexCoord;
+layout (location = 2) in vec2 vTexCoord;
 
-layout (location = 0) out vec3 outColor;
-layout (location = 1) out vec2 texCoord;
-layout (location = 2) out vec3 outNormal;
-layout (location = 3) out vec3 outPosition;
+layout (location = 0) out vec3 outPosition;
+layout (location = 1) out vec3 outNormal;
+layout (location = 2) out vec2 texCoord;
 
 layout(set = 0, binding = 0) uniform SceneData
 {
@@ -40,12 +38,8 @@ void main()
 {
   vec4 position = objectBuffer.objects[gl_BaseInstance].model * vec4(vPosition, 1.0f);
   
-  float scale = 1.0;//(gl_BaseInstance + 1);
-  position = vec4(position.x * scale, position.y * scale, position.z * scale, 1.0);
-  
   gl_Position = cameraData.viewproj * position;
-  outColor = vColor;
-  texCoord = vTexCoord;
-  outNormal = vNormal;
   outPosition = vPosition;
+  outNormal = vNormal;
+  texCoord = vTexCoord;
 }

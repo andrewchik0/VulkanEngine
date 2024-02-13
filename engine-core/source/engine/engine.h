@@ -27,6 +27,7 @@ namespace VKEngine {
     inline Camera& camera() { return _camera; }
     inline Window& window() { return *_window.get(); }
     inline Render& render() { return _render; }
+    inline GUI& gui() { return _render._gui; }
     
     inline Utils::TimeHandler& time() { return _timeHandler; }
     inline Utils::FileWatchers& file_watchers() { return _fileWatchers; }

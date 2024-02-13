@@ -2,14 +2,14 @@
 #include "engine/engine.h"
 
 namespace VKEngine {
-  bool is_pressed(Key key)
+  bool is_pressed(KeyCodes key)
   {
-    return Engine::get()->window()._input._isPressed[KEY_MASK(key)];
+    return Engine::get()->window()._input._isPressed[KEY_MASK((Key)key)];
   }
 
-  bool is_pressing(Key key)
+  bool is_pressing(KeyCodes key)
   {
-    return Engine::get()->window()._input._isPressing[KEY_MASK(key)];
+    return Engine::get()->window()._input._isPressing[KEY_MASK((Key)key)];
   }
 
   math::UPoint mouse_pos()

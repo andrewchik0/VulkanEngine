@@ -56,8 +56,8 @@ namespace VKEngine {
     }
   };
   
-  bool is_pressed(Key key);
-  bool is_pressing(Key key);
+  bool is_pressed(KeyCodes key);
+  bool is_pressing(KeyCodes key);
   math::UPoint mouse_pos();
   math::Point mouse_delta();
   int32_t mouse_wheel();

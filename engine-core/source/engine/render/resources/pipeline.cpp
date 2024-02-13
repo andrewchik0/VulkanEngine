@@ -47,10 +47,8 @@ namespace VKEngine {
       std::cout << "failed to create pipline\n";
       return VK_NULL_HANDLE;
     }
-    else
-    {
-      return newPipeline;
-    }
+    
+    return newPipeline;
   }
   
   void Pipeline::destroy(Render *render)
@@ -59,12 +57,12 @@ namespace VKEngine {
     vkDestroyPipelineLayout(render->get_vk_state().device, layout, nullptr);
   }
   
-  Pipeline* Pipelines::push(const std::string& name, VkPipeline pipeline, VkPipelineLayout layout, const std::vector<ShaderData>& shaderData)
+  Pipeline* Pipelines::push(const std::string& name, VkPipeline pipeline, VkPipelineLayout layout, const std::vector<ShaderInfo>& shaderData)
   {
     return &(_resources[name] = Pipeline{pipeline, layout, shaderData});
   }
   
-  bool Pipelines::load_shader_module(const ShaderData& shaderData, VkShaderModule* outShaderModule)
+  bool Pipelines::load_shader_module(const ShaderInfo& shaderData, VkShaderModule* outShaderModule)
   {
     std::ifstream file(shaderData.get_full_filename(), std::ios::in);
     
@@ -98,39 +96,35 @@ namespace VKEngine {
     return true;
   }
   
-  VkShaderModule* Pipelines::get_shader_module(const ShaderData& shaderData, bool bUseCache)
+  VkShaderModule* Pipelines::get_shader_module(const ShaderInfo& shaderData, bool bUseCache)
   {
-    if (_loadedShaders.find(shaderData.filename) != _loadedShaders.end() && bUseCache)
-      return &_loadedShaders[shaderData.filename];
-    else
-    {
-      clean_loaded_shader(shaderData.filename);
-      
-      VkShaderModule newModule;
-      
-      if (load_shader_module(shaderData, &newModule))
-        return &(_loadedShaders[shaderData.filename] = newModule);
-      else
-      {
-        std::cout << "Couldn't load a shader: " << shaderData.filename << '\n';
-        return nullptr;
-      }
-    }
+    if (_loadedShaders.find(shaderData.get_full_filename()) != _loadedShaders.end() && bUseCache)
+      return &_loadedShaders[shaderData.get_full_filename()];
+    clean_loaded_shader(shaderData.get_full_filename());
+    
+    VkShaderModule newModule;
+    if (load_shader_module(shaderData, &newModule))
+      return &(_loadedShaders[shaderData.get_full_filename()] = newModule);
+    
+    std::cout << "Couldn't load a shader: " << shaderData.filename << '\n';
+    return nullptr;
   }
   
-  bool Pipelines::build(const std::vector<ShaderData>& shaderData, Pipeline& pipeline, bool bUseCache /*= true*/)
+  bool Pipelines::build(const std::vector<ShaderInfo>& shaderInfos, Pipeline& pipeline, bool bUseCache /*= true*/)
   {
     PipelineBuilder pipelineBuilder;
+    VertexInputDescription vertexDescription;
     
-    for (auto &shData : shaderData)
+    for (auto &shaderInfo : shaderInfos)
     {
-      auto shader = get_shader_module(shData, bUseCache);
+      auto shader = get_shader_module(shaderInfo, bUseCache);
       if (shader == nullptr)
         return false;
       
-      switch (shData.kind)
+      switch (shaderInfo.kind)
       {
         case SHADER_VERTEX:
+          vertexDescription = shaderInfo.description;
           pipelineBuilder._shaderStages.push_back(VKInit::pipeline_shader_stage_create_info(VK_SHADER_STAGE_VERTEX_BIT, *shader));
           break;
         case SHADER_FRAGMENT:
@@ -167,13 +161,11 @@ namespace VKEngine {
     pipelineBuilder._viewport.minDepth = 0.0f;
     pipelineBuilder._viewport.maxDepth = 1.0f;
     pipelineBuilder._scissor.offset = { 0, 0 };
-    pipelineBuilder._scissor.extent = { _render->width(), _render-> height() };
+    pipelineBuilder._scissor.extent = { _render->width(), _render->height() };
     pipelineBuilder._rasterizer = VKInit::rasterization_state_create_info(VK_POLYGON_MODE_FILL);
     pipelineBuilder._multisampling = VKInit::multisampling_state_create_info();
     pipelineBuilder._colorBlendAttachment = VKInit::color_blend_attachment_state();
     pipelineBuilder._depthStencil = VKInit::depth_stencil_create_info(true, true, VK_COMPARE_OP_LESS_OR_EQUAL);
-    
-    VertexInputDescription vertexDescription = Vertex::get_vertex_description();
     
     pipelineBuilder._vertexInputInfo.pVertexAttributeDescriptions = vertexDescription.attributes.data();
     pipelineBuilder._vertexInputInfo.vertexAttributeDescriptionCount = (uint32_t)vertexDescription.attributes.size();
@@ -183,22 +175,22 @@ namespace VKEngine {
     VkPipeline vkPipeline = pipelineBuilder.build(_render->get_vk_state().device, _render->_renderPasses._default);
     pipeline.pipeline = vkPipeline;
     pipeline.layout = pipLayout;
-    pipeline.shaderData = shaderData;
+    pipeline.shaderInfos = shaderInfos;
     
     return true;
   }
 
-  std::vector<ShaderData> Pipelines::filename_to_shaderdata(const std::string& filename)
+  std::vector<ShaderInfo> Pipelines::filename_to_shaderdata(const std::string& filename, const VertexInputDescription& description)
   {
-    ShaderData shaderData{filename, SHADER_VERTEX};
-    std::vector<ShaderData> result;
+    ShaderInfo shaderInfo{filename, SHADER_VERTEX, description};
+    std::vector<ShaderInfo> result;
 
-    if (std::filesystem::exists(shaderData.get_full_filename()))
-      result.push_back(shaderData);
+    if (std::filesystem::exists(shaderInfo.get_full_filename()))
+      result.push_back(shaderInfo);
     
-    shaderData.kind = SHADER_FRAGMENT;
-    if (std::filesystem::exists(shaderData.get_full_filename()))
-      result.push_back(shaderData);
+    shaderInfo.kind = SHADER_FRAGMENT;
+    if (std::filesystem::exists(shaderInfo.get_full_filename()))
+      result.push_back(shaderInfo);
     return result;
   }
   
@@ -218,11 +210,11 @@ namespace VKEngine {
   
   void Pipelines::reload()
   {
-    std::unordered_map<std::string, std::vector<ShaderData>> pipelinesToReload;
+    std::unordered_map<std::string, std::vector<ShaderInfo>> pipelinesToReload;
     
     for (auto& it : _resources)
     {
-      pipelinesToReload[it.first] = it.second.shaderData;
+      pipelinesToReload[it.first] = it.second.shaderInfos;
     }
     
     ResourceManager::destroy();
@@ -243,7 +235,7 @@ namespace VKEngine {
       return;
     
     Pipeline newPipeline;
-    if (build(pipeline->shaderData, newPipeline, false))
+    if (build(pipeline->shaderInfos, newPipeline, false))
     {
       ResourceManager::destroy(name);
       _resources[name] = newPipeline;
@@ -256,29 +248,32 @@ namespace VKEngine {
     clean_loaded_shaders();
   }
  
-  Pipeline* Pipelines::create(const std::string& name, const std::vector<ShaderData>& shaderData)
+  Pipeline* Pipelines::create(const std::string& name, const std::vector<ShaderInfo>& shaderInfos)
   {
-    if (shaderData.size() == 0)
+    if (shaderInfos.size() == 0)
       return nullptr;
     
-    for (auto& data : shaderData)
+    for (auto& info : shaderInfos)
     {
-      if (!std::filesystem::exists(data.get_full_filename()))
+      if (!std::filesystem::exists(info.get_full_filename()))
+      {
+        assert_msg("Shader file: \"" + info.filename + "\" does not exist!");
         return nullptr;
+      }
       
-      add_file_watcher_debug_only(data.get_full_filename(), [=]{
+      add_file_watcher_debug_only(info.get_full_filename(), [=]{
         _render->get_vk_state().wait();
         reload(name);
       });
     }
     Pipeline pipeline;
-    if (build(shaderData, pipeline))
+    if (build(shaderInfos, pipeline))
       return &(_resources[name] = pipeline);
     return nullptr;
   }
   
-  Pipeline* Pipelines::create(const std::string& name, const std::string& filename)
+  Pipeline* Pipelines::create(const std::string& name, const std::string& filename, const VertexInputDescription& description)
   {
-    return create(name, filename_to_shaderdata(filename));
+    return create(name, filename_to_shaderdata(filename, description));
   }
 }

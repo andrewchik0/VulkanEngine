@@ -4,13 +4,13 @@
 #include "engine/render/resources/vertex.h"
 
 namespace VKEngine {
-  
+
   struct Mesh : public IResource
   {
-    std::vector<Vertex> vertices;
+    Vertices vertices;
     AllocatedBuffer vertexBuffer;
     
-    bool load_from_obj(const std::string& filename);
+    bool load_from_obj(const std::string& filename, bool bUseTexture = false);
     
     void destroy(Render *render) override;
   };
@@ -19,8 +19,8 @@ namespace VKEngine {
   class Meshes : public ResourceManager<std::string, Mesh>
   {
   public:
-    Mesh* create(const std::string& name, const std::string& filename);
-    Mesh* create(const std::string& name, const std::vector<Vertex>& vertices);
+    Mesh* create(const std::string& name, const std::string& filename, bool bUseTexture = false);
+    Mesh* create(const std::string &name, const Vertices& vertices);
 
   private:
     void upload_mesh(Mesh& mesh);

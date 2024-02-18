@@ -13,6 +13,7 @@ file(GLOB THIRD_PARTY_FILES
   "third_party/tiny_obj_loader/*"
   "third_party/vk_mem_alloc/*"
   "third_party/stb_image/*"
+  "third_party/libschrift/*"
 )
 
 file(GLOB_RECURSE SHADER_FILES 
@@ -48,6 +49,8 @@ endforeach()
 # Include third party dependencies
 target_include_directories(${ENGINE_CORE} SYSTEM PUBLIC ${CMAKE_CURRENT_LIST_DIR}/third_party/)
 target_include_directories(${ENGINE_CORE} SYSTEM PUBLIC ${CMAKE_CURRENT_LIST_DIR}/third_party/glm)
+
+set_source_files_properties(${CMAKE_CURRENT_LIST_DIR}/third_party/libschrift/shcrift.c PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 
 # Vulkan
 find_package(Vulkan REQUIRED OPTIONAL_COMPONENTS shaderc_combined)

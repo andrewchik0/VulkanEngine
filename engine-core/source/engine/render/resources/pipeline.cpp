@@ -187,10 +187,14 @@ namespace VKEngine {
 
     if (std::filesystem::exists(shaderInfo.get_full_filename()))
       result.push_back(shaderInfo);
+    else
+      assert_msg("No such file: " + shaderInfo.get_full_filename());
     
     shaderInfo.kind = SHADER_FRAGMENT;
     if (std::filesystem::exists(shaderInfo.get_full_filename()))
       result.push_back(shaderInfo);
+    else
+      assert_msg("No such file: " + shaderInfo.get_full_filename());
     return result;
   }
   

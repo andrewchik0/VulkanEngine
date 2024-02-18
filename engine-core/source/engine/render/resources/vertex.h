@@ -135,22 +135,25 @@ namespace VKEngine {
   
   struct Vertices
   {
-    std::vector<glm::vec3> positions;
+    std::vector<glm::vec3> positions3f;
+    std::vector<glm::vec2> positions2f;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> texuvs;
     std::vector<glm::vec3> colors;
     
     uint32_t size()
     {
-      return (uint32_t)positions.size();
+      return (uint32_t)pos_size();
     }
     
     VertexInputDescription build_vertex_desc()
     {
       VertexInputDescriptionBuilder builder;
       
-      if (!positions.empty())
+      if (!positions3f.empty())
         builder.float3();
+      if (!positions2f.empty())
+        builder.float2();
       if (!normals.empty())
         builder.float3();
       if (!texuvs.empty())
@@ -165,13 +168,17 @@ namespace VKEngine {
     {
       RawBuffer packed;
       
-      if ((normals.size() != 0 && normals.size() != positions.size()) ||
-           (texuvs.size() != 0 &&  texuvs.size() != positions.size()) ||
-           (colors.size() != 0 &&  colors.size() != positions.size()))
+      if ((normals.size() != 0 && normals.size() != pos_size()) ||
+           (texuvs.size() != 0 &&  texuvs.size() != pos_size()) ||
+           (colors.size() != 0 &&  colors.size() != pos_size()))
+      {
+        assert_msg("Additional vertex data size does not match to size of positions");
         return packed;
+      }
       
-      uint32_t vertexSize = 3 + !normals.empty() * 3 + !texuvs.empty() * 2 + !colors.empty() * 3;
-      size_t size = positions.size() * vertexSize;
+      uint32_t dim = get_position_dim();
+      uint32_t vertexSize = dim + !normals.empty() * 3 + !texuvs.empty() * 2 + !colors.empty() * 3;
+      size_t size = pos_size() * vertexSize;
       packed.data = new float[size * sizeof(float)];
       packed.size = size * sizeof(float);
       
@@ -180,10 +187,18 @@ namespace VKEngine {
       {
         uint32_t offset = 0;
         
-        ptr[i + 0] = positions[i / vertexSize].x;
-        ptr[i + 1] = positions[i / vertexSize].y;
-        ptr[i + 2] = positions[i / vertexSize].z;
-        offset += 3;
+        if (dim == 2)
+        {
+          ptr[i + 0] = positions2f[i / vertexSize].x;
+          ptr[i + 1] = positions2f[i / vertexSize].y;
+        }
+        else if (dim == 3)
+        {
+          ptr[i + 0] = positions3f[i / vertexSize].x;
+          ptr[i + 1] = positions3f[i / vertexSize].y;
+          ptr[i + 2] = positions3f[i / vertexSize].z;
+        }
+        offset += dim;
         
         if (!normals.empty())
         {
@@ -207,6 +222,29 @@ namespace VKEngine {
         }
       }
       return packed;
+    }
+    
+  private:
+
+    size_t pos_size()
+    {
+      assert_if_not(positions3f.size() == 0 || positions2f.size() == 0, "In mesh may be only one type of positions (2f or 3f)");
+      return positions3f.size() | positions2f.size();
+    }
+    
+    uint32_t get_position_dim()
+    {
+      if (!positions2f.empty() && !positions3f.empty())
+      {
+        assert_msg("In mesh may be only one type of positions (2f or 3f)");
+        return 0;
+      }
+      if (!positions3f.empty() && positions2f.empty())
+        return 3;
+      if (positions3f.empty() && !positions2f.empty())
+        return 2;
+      assert_msg("Mesh is required to have position coordinates");
+      return 0;
     }
   };
   

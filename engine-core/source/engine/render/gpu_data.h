@@ -23,6 +23,7 @@ namespace VKEngine {
     glm::vec4 pos;
     glm::vec4 lookAt;
     glm::vec4 up;
+    glm::vec4 screenSize;
   };
   
   constexpr uint32_t OBJECT_DATA_BINDING = 0;

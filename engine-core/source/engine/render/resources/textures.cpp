@@ -10,13 +10,12 @@ namespace VKEngine {
   {
     switch (_type)
     {
+    case R:
+      return STBI_grey;
     case RGB:
       return STBI_rgb;
-      break;
     case RGBA:
       return STBI_rgb_alpha;
-      break;
-        
     default:
       return 0;
     }
@@ -26,6 +25,8 @@ namespace VKEngine {
   {
     switch (_type)
     {
+    case R:
+      return VK_FORMAT_R8_SRGB;
     case RGB:
       return VK_FORMAT_R8G8B8_SRGB;
     case RGBA:
@@ -39,6 +40,8 @@ namespace VKEngine {
   {
     switch (_type)
     {
+    case R:
+      return 1;
     case RGB:
       return 3;
     case RGBA:
@@ -48,8 +51,15 @@ namespace VKEngine {
     }
   }
   
+  Texture* Textures::create_from_memory(const std::string& name, const RawTexture& buffer, ImageType type/* = ImageType::RGBA*/)
+  {
+    return create_from_memory(name, buffer, buffer.width, buffer.height, type);
+  }
+  
   Texture* Textures::create_from_memory(const std::string& name, const RawBuffer& buffer, uint32_t width, uint32_t height, ImageType type /* = ImageType::RGBA */)
   {
+    if (width * height == 0)
+      assert_msg("Zero sized image can not be rendered");
     if (buffer.size < width * height * type.get_pixel_size())
       assert_msg("Image buffer overflow");
     
@@ -128,7 +138,7 @@ namespace VKEngine {
     
     vmaDestroyBuffer(_render->get_vk_state().allocator, stagingBuffer.buffer, stagingBuffer.allocation);
     
-    VkImageViewCreateInfo imageinfo = VKInit::imageview_create_info(VK_FORMAT_R8G8B8A8_SRGB, texture.image, VK_IMAGE_ASPECT_COLOR_BIT);
+    VkImageViewCreateInfo imageinfo = VKInit::imageview_create_info(type.to_vk_enum(), texture.image, VK_IMAGE_ASPECT_COLOR_BIT);
     vkCreateImageView(_render->get_vk_state().device, &imageinfo, nullptr, &texture.imageView);
     
     VkDescriptorSetAllocateInfo allocInfo = {};
@@ -160,7 +170,7 @@ namespace VKEngine {
   {
     int32_t texWidth, texHeight, texChannels;
     
-    stbi_uc* pixels = stbi_load(filename.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+    stbi_uc* pixels = stbi_load(filename.c_str(), &texWidth, &texHeight, &texChannels, type.to_stb_enum());
     
     if (!pixels)
     {

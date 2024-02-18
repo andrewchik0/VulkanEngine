@@ -17,6 +17,7 @@ namespace VKEngine {
     _pipelines.init(this);
     _textures.init(this);
     _meshes.init(this);
+    _gui.init();
   }
   
   void Render::draw()
@@ -24,8 +25,14 @@ namespace VKEngine {
     _frames.start();
     MARK_ZONE("frame started");
     
+    send_data(_renderables.data(), (uint32_t)_renderables.size());
+    MARK_ZONE("sended_data");
+    
     draw_objects(_frames.current().mainCommandBuffer, _renderables.data(), (uint32_t)_renderables.size());
     MARK_ZONE("objects rendered");
+    
+    _gui.render(_frames.current().mainCommandBuffer);
+    MARK_ZONE("GUI rendered");
     
     _frames.end();
     _frames++;
@@ -51,6 +58,7 @@ namespace VKEngine {
   {
     _vkState.wait();
     
+    _fontHandler.free();
     _pipelines.destroy();
     _descriptors.destroy();
     _uploadContext.destroy();
@@ -62,7 +70,7 @@ namespace VKEngine {
     _vkState.destroy();
   }
   
-  void Render::draw_objects(VkCommandBuffer cmd, RenderObject* first, uint32_t count)
+  void Render::send_data(RenderObject* first, uint32_t count)
   {
     GPUCameraData camData;
     
@@ -73,18 +81,13 @@ namespace VKEngine {
     camData.pos = glm::vec4(cam.pos(), 1.0);
     camData.lookAt = glm::vec4(cam.lookAt(), 1.0);
     camData.up = glm::vec4(cam.up(), 1.0);
-    
-    void* cameraData;
-    vmaMapMemory(_vkState.allocator, _frames.current().descriptorSets.cameraBuffer.allocation, &cameraData);
-    memcpy(cameraData, &camData, sizeof(GPUCameraData));
-    vmaUnmapMemory(_vkState.allocator, _frames.current().descriptorSets.cameraBuffer.allocation);
+    camData.screenSize = glm::vec4(Engine::get()->window().width(), Engine::get()->window().height(), 0.0f, 0.0f);
     
     GPUSceneData scData = {};
     scData.sunlightColor = glm::vec4(1, 1, 1, 1);
-    void* sceneData;
-    vmaMapMemory(_vkState.allocator, _frames.current().descriptorSets.sceneBuffer.allocation, &sceneData);
-    memcpy(sceneData, &scData, sizeof(GPUSceneData));
-    vmaUnmapMemory(_vkState.allocator, _frames.current().descriptorSets.sceneBuffer.allocation);
+    
+    _frames.current().descriptorSets.cameraBuffer.map(&camData, sizeof(GPUCameraData));
+    _frames.current().descriptorSets.sceneBuffer.map(&scData, sizeof(GPUSceneData));
     
     void* objectData;
     vmaMapMemory(_vkState.allocator, _frames.current().descriptorSets.objectBuffer.allocation, &objectData);
@@ -95,16 +98,17 @@ namespace VKEngine {
       objectSSBO[i].modelMatrix = object.transformMatrix;
     }
     vmaUnmapMemory(_vkState.allocator, _frames.current().descriptorSets.objectBuffer.allocation);
-    
+  }
+  
+  void Render::draw_objects(VkCommandBuffer cmd, RenderObject* first, uint32_t count)
+  {
     Pipeline* pipeline = nullptr;
-    
-    MARK_ZONE("sended_data");
     
     for (uint32_t i = 0; i < count; i++)
     {
       RenderObject& object = first[i];
       
-      if (pipeline != object.material->pipeline)
+      //if (pipeline != object.material->pipeline)
       {
         pipeline = object.material->pipeline;
         object.material->pipeline->bind(cmd);
@@ -122,7 +126,7 @@ namespace VKEngine {
       VkDeviceSize offset = 0;
       vkCmdBindVertexBuffers(cmd, 0, 1, &object.mesh->vertexBuffer.buffer, &offset);
       
-      vkCmdDraw(cmd, (uint32_t)(object.mesh->vertices.size()), 1, 0, i);
+      vkCmdDraw(cmd, object.mesh->vertices.size(), 1, 0, i);
       
     }
   }

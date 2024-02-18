@@ -23,6 +23,7 @@ layout(set = 1, binding = 0) uniform CameraData
   vec4 pos;
   vec4 lookAt;
   vec4 up;
+  vec4 screenSize;
 } cameraData;
 
 layout(set = 2, binding = 0) uniform ObjectData

@@ -60,10 +60,28 @@ namespace VKEngine {
   
   void Engine::init_scene()
   {
+    _render._fontHandler.load_font("assets/Consolas.ttf", 30);
+    _render._fontHandler.set_current_font("assets/ARIAL.TTF", 18);
+    
+    RawTexture tex = RawTexture::plain(0x88000000);
+    GUIImageCreateInfo info;
+    info.pos.y1 = 20;
+    info.pos.x2 = 20;
+    info.width = 600;
+    info.height = 600;
+    info.textureBuf = &tex;
+    _render._gui.image(info);
+    
+    GUITextCreateInfo textInfo;
+    textInfo.pos.y1 = 50;
+    textInfo.pos.x2 = 570;
+    textInfo.text = "AVI\nThis is a font testing\nHello123 ! ^&()&^";
+    _render._gui.text(textInfo);
+    
     _render._frames.set_clear_value({ 0.4, 0.5, 1, 1 });
     Vertices vertices;
     
-    vertices.positions =
+    vertices.positions3f =
     {
       {  1.f,  1.f, 0.0f },
       { -1.f,  1.f, 0.0f },

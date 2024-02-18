@@ -9,6 +9,7 @@ namespace VKEngine {
   public:
     enum Type
     {
+      R,
       RGB,
       RGBA,
     };
@@ -41,6 +42,7 @@ namespace VKEngine {
   public:
     Texture* create_from_file(const std::string& name, const std::string& filename, ImageType type = ImageType::RGBA);
     Texture* create_from_memory(const std::string& name, const RawBuffer& buffer, uint32_t width, uint32_t height, ImageType type = ImageType::RGBA);
+    Texture* create_from_memory(const std::string& name, const RawTexture& buffer, ImageType type = ImageType::RGBA);
     
   private:
   };

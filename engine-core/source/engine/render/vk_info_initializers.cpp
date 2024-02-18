@@ -164,15 +164,12 @@ namespace VKEngine::VKInit {
     info.pNext = nullptr;
     
     info.depthClampEnable = VK_FALSE;
-    //rasterizer discard allows objects with holes, default to no
     info.rasterizerDiscardEnable = VK_FALSE;
     
     info.polygonMode = polygonMode;
     info.lineWidth = 1.0f;
-    //no backface cull
     info.cullMode = VK_CULL_MODE_NONE;
     info.frontFace = VK_FRONT_FACE_CLOCKWISE;
-    //no depth bias
     info.depthBiasEnable = VK_FALSE;
     info.depthBiasConstantFactor = 0.0f;
     info.depthBiasClamp = 0.0f;
@@ -200,9 +197,18 @@ namespace VKEngine::VKInit {
   VkPipelineColorBlendAttachmentState color_blend_attachment_state()
   {
     VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
-    colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
-    VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-    colorBlendAttachment.blendEnable = VK_FALSE;
+    colorBlendAttachment.colorWriteMask = 
+      VK_COLOR_COMPONENT_R_BIT |
+      VK_COLOR_COMPONENT_G_BIT |
+      VK_COLOR_COMPONENT_B_BIT |
+      VK_COLOR_COMPONENT_A_BIT;
+    colorBlendAttachment.blendEnable = VK_TRUE;
+    colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+    colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
     return colorBlendAttachment;
   }
   

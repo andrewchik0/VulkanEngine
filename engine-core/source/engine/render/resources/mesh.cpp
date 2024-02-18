@@ -47,7 +47,7 @@ namespace VKEngine {
           tinyobj::real_t g = attrib.colors[3 * idx.vertex_index + 1];
           tinyobj::real_t b = attrib.colors[3 * idx.vertex_index + 2];
           
-          vertices.positions.push_back({vx, vy, vz});
+          vertices.positions3f.push_back({vx, vy, vz});
           vertices.normals.push_back({nx, ny, nz});
           
           bUseTexture ?

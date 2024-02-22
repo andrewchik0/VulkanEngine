@@ -22,7 +22,8 @@ namespace VKEngine {
     void init(VkState* vkState, uint32_t width, uint32_t height);
     void destroy();
     
-    void init(uint32_t width, uint32_t height) { init(_vkState, width, height); }
+    void init(uint32_t width, uint32_t height)
+      { init(_vkState, width, height); }
 
   private:
     VkState *_vkState;

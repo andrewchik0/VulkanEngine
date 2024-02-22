@@ -16,9 +16,14 @@ layout(set = 1, binding = 0) uniform CameraData
   vec4 screenSize;
 } cameraData;
 
+layout(push_constant, std430) uniform pushConstants
+{
+  vec4 pos;
+};
+
 void main()
 {
   
-  gl_Position = vec4(vPosition / cameraData.screenSize.xy * 2.0f - 1.0f, 0.0, 1.0f);
+  gl_Position = vec4((vPosition + pos.xy) / cameraData.screenSize.xy * 2.0f - 1.0f, 0.0, 1.0f);
   texCoord = vTexCoord;
 }

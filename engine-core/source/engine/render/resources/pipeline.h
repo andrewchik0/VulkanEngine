@@ -68,6 +68,7 @@ namespace VKEngine {
     VkPipeline pipeline{ VK_NULL_HANDLE };
     VkPipelineLayout layout{ VK_NULL_HANDLE };
     std::vector<ShaderInfo> shaderInfos;
+    uint32_t pushConstantSize = 0;
     
     Pipeline() {}
     Pipeline(VkPipeline pip, VkPipelineLayout pipelineLayout, const std::vector<ShaderInfo>& shaderData) :
@@ -76,11 +77,15 @@ namespace VKEngine {
       shaderInfos(shaderData)
     {}
     
-    void bind(VkCommandBuffer cmd) { vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline); }
+    void bind(VkCommandBuffer cmd)
+      { vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline); }
+    
+    template<typename T>
+    void push_constant(VkCommandBuffer cmd, T data)
+      { vkCmdPushConstants(cmd, layout, VK_SHADER_STAGE_ALL_GRAPHICS, 0, pushConstantSize, &data); }
+                       
     void bind_descriptor(VkCommandBuffer cmd, uint32_t set, VkDescriptorSet descriptorSet)
-    {
-      vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, set, 1, &descriptorSet, 0, nullptr);
-    }
+      { vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, set, 1, &descriptorSet, 0, nullptr); }
     
     void destroy(Render *render) override;
   };
@@ -92,8 +97,8 @@ namespace VKEngine {
     void reload(const std::string& name);
     void destroy();
     
-    Pipeline* create(const std::string& name, const std::vector<ShaderInfo>& shaderInfo);
-    Pipeline* create(const std::string& name, const std::string& filename, const VertexInputDescription& description);
+    Pipeline* create(const std::string& name, const std::vector<ShaderInfo>& shaderInfo, uint32_t pushConstantSize);
+    Pipeline* create(const std::string& name, const std::string& filename, const VertexInputDescription& description, uint32_t pushConstantSize);
 
   private:
     std::unordered_map<std::string, VkShaderModule> _loadedShaders;
@@ -106,7 +111,7 @@ namespace VKEngine {
     void clean_loaded_shaders();
     void clean_loaded_shader(const std::string& name);
     
-    bool build(const std::vector<ShaderInfo>& shaderInfos, Pipeline& pipeline, bool bUseCache = true);
+    bool build(const std::vector<ShaderInfo>& shaderInfos, uint32_t pushConstantSize, Pipeline& pipeline, bool bUseCache = true);
 
     std::vector<ShaderInfo> filename_to_shaderdata(const std::string& filename, const VertexInputDescription& description);
   };

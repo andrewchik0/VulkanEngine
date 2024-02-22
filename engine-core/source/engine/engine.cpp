@@ -118,8 +118,8 @@ namespace VKEngine {
       { "textured", SHADER_VERTEX, vertexTexturedDesc },
       { "textured", SHADER_FRAGMENT },
     };
-    _render._pipelines.create("default", defaultInfo);
-    _render._pipelines.create("textured", texturedInfo);
+    _render._pipelines.create("default", defaultInfo, 0);
+    _render._pipelines.create("textured", texturedInfo, 0);
     
     _render._materials.create("defaultmesh", _render._pipelines["default"]);
     _render._materials.create("texturedmesh", _render._pipelines["textured"]);

@@ -60,7 +60,7 @@ namespace VKEngine {
       sft_freefont(font.second.sft.font);
   }
   
-  RawTexture FontHandler::get_string_rendered(const std::string& text)
+  RawTexture FontHandler::render_static_string(const std::string& text)
   {
     RawTexture tex;
     int32_t totalWidth = 0, numOfLines = 1;

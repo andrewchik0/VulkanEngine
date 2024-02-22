@@ -23,10 +23,17 @@ namespace VKEngine {
   {
   public:
     
-    void add_object(RenderObject& object) { _renderables.push_back(object); }
-    VkState& get_vk_state() { return _vkState; }
-    uint32_t& width() { return *_width; }
-    uint32_t& height() { return *_height; }
+    void add_object(RenderObject& object)
+      { _renderables.push_back(object); }
+    
+    VkState& get_vk_state()
+      { return _vkState; }
+    
+    uint32_t& width()
+      { return *_width; }
+    
+    uint32_t& height()
+      { return *_height; }
     
     SwapchainHandler _swapchainHandler;
     RenderPasses _renderPasses;

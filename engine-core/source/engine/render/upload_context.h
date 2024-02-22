@@ -11,7 +11,8 @@ namespace VKEngine {
     VkCommandPool _commandPool{ VK_NULL_HANDLE };
     VkCommandBuffer _commandBuffer{ VK_NULL_HANDLE };
 
-    UploadContext() {}
+    UploadContext()
+      {}
     
     void init(VkState *state);
     void destroy();

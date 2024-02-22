@@ -19,7 +19,6 @@ namespace VKEngine {
     _object = std::make_unique<RenderObject>();
     _object->mesh = Engine::get()->render()._meshes.create(random_string(16), rectangle(rect));
     _object->material = Engine::get()->render()._materials.create(random_string(16), Engine::get()->render()._pipelines["gui-image-pipeline"]);
-    _object->material->pipeline = Engine::get()->render()._pipelines["gui-image-pipeline"];
     if (info.textureBuf->size > 0)
       _object->material->texture = Engine::get()->render()._textures.create_from_memory(random_string(16), *info.textureBuf, info.textureBuf->width, info.textureBuf->height, ImageType::RGBA);
     if (!info.textureFilename.empty())
@@ -28,6 +27,7 @@ namespace VKEngine {
   
   void GUIImage::render(VkCommandBuffer cmd)
   {
+    _object->material->pipeline->push_constant(cmd, glm::vec4(_position, 0.0f, 0.0f));
     Engine::get()->render().draw_objects(cmd, _object.get(), 1);
   }
 }

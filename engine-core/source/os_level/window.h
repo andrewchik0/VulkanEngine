@@ -22,9 +22,20 @@ namespace VKEngine {
     virtual void hide_cursor() = 0;
     virtual void go_fullscreen() = 0;
 
-    uint32_t& height() { return _windowExtent.height; }
-    uint32_t& width() { return _windowExtent.width; }
-    VkExtent2D ext() { return _windowExtent; }
+    uint32_t& height()
+      { return _windowExtent.height; }
+    
+    uint32_t& width()
+      { return _windowExtent.width; }
+    
+    VkExtent2D ext()
+      { return _windowExtent; }
+    
+    uint32_t& old_height()
+      { return _oldWindowExtent.height; }
+    
+    uint32_t& old_width()
+      { return _oldWindowExtent.width; }
 
     static std::unique_ptr<Window> create_window();
     static void delete_window(std::unique_ptr<Window>& window);
@@ -37,6 +48,7 @@ namespace VKEngine {
     bool _bIsFullscreen = false;
 
     VkExtent2D _windowExtent{1700, 900};
+    VkExtent2D _oldWindowExtent{1700, 900};
   };
 
 }

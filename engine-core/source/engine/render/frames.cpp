@@ -64,7 +64,9 @@ namespace VKEngine {
     
     VK_CHECK(vkResetCommandBuffer(current().mainCommandBuffer, 0));
     
-    VK_CHECK(vkAcquireNextImageKHR(_vkState->device, _swapchainHandler->_swapchain, _timeout, current().presentSemaphore, nullptr, &swapchainImageIndex));
+    VkResult result = vkAcquireNextImageKHR(_vkState->device, _swapchainHandler->_swapchain, _timeout, current().presentSemaphore, nullptr, &swapchainImageIndex);
+    if (result != VK_SUBOPTIMAL_KHR)
+      VK_CHECK(result);
     
     VkCommandBufferBeginInfo cmdBeginInfo = VKInit::command_buffer_begin_info(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
     VK_CHECK(vkBeginCommandBuffer(current().mainCommandBuffer, &cmdBeginInfo));
@@ -107,7 +109,9 @@ namespace VKEngine {
     presentInfo.waitSemaphoreCount = 1;
     presentInfo.pImageIndices = &swapchainImageIndex;
     
-    VK_CHECK(vkQueuePresentKHR(_vkState->graphicsQueue, &presentInfo));
+    VkResult result = vkQueuePresentKHR(_vkState->graphicsQueue, &presentInfo);
+    if (result != VK_SUBOPTIMAL_KHR)
+      VK_CHECK(result);
   }
   
 }

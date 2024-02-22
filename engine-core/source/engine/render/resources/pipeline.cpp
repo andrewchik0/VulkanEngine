@@ -110,7 +110,7 @@ namespace VKEngine {
     return nullptr;
   }
   
-  bool Pipelines::build(const std::vector<ShaderInfo>& shaderInfos, Pipeline& pipeline, bool bUseCache /*= true*/)
+  bool Pipelines::build(const std::vector<ShaderInfo>& shaderInfos, uint32_t pushConstantSize, Pipeline& pipeline, bool bUseCache /*= true*/)
   {
     PipelineBuilder pipelineBuilder;
     VertexInputDescription vertexDescription;
@@ -148,6 +148,17 @@ namespace VKEngine {
     pipeline_layout_info.setLayoutCount = 4;
     pipeline_layout_info.pSetLayouts = setLayouts;
     
+    VkPushConstantRange pushConstantRange;
+    pushConstantRange.offset = 0;
+    pushConstantRange.size = pushConstantSize;
+    pushConstantRange.stageFlags = VK_SHADER_STAGE_ALL_GRAPHICS;
+    
+    if (pushConstantSize > 0)
+    {
+      pipeline_layout_info.pPushConstantRanges = &pushConstantRange;
+      pipeline_layout_info.pushConstantRangeCount = 1;
+    }
+    
     VkPipelineLayout pipLayout;
     VK_CHECK(vkCreatePipelineLayout(_render->get_vk_state().device, &pipeline_layout_info, nullptr, &pipLayout));
     
@@ -176,6 +187,7 @@ namespace VKEngine {
     pipeline.pipeline = vkPipeline;
     pipeline.layout = pipLayout;
     pipeline.shaderInfos = shaderInfos;
+    pipeline.pushConstantSize = pushConstantSize;
     
     return true;
   }
@@ -214,11 +226,17 @@ namespace VKEngine {
   
   void Pipelines::reload()
   {
-    std::unordered_map<std::string, std::vector<ShaderInfo>> pipelinesToReload;
+    struct PipInfo
+    {
+      std::vector<ShaderInfo> infos;
+      uint32_t pushConstants;
+    };
+    std::unordered_map<std::string, PipInfo> pipelinesToReload;
     
     for (auto& it : _resources)
     {
-      pipelinesToReload[it.first] = it.second.shaderInfos;
+      pipelinesToReload[it.first].infos = it.second.shaderInfos;
+      pipelinesToReload[it.first].pushConstants = it.second.pushConstantSize;
     }
     
     ResourceManager::destroy();
@@ -226,7 +244,7 @@ namespace VKEngine {
     for (auto& it : pipelinesToReload)
     {
       Pipeline pipeline;
-      if (build(it.second, pipeline, false))
+      if (build(it.second.infos, it.second.pushConstants, pipeline, false))
         _resources[it.first] = pipeline;
     }
   }
@@ -239,7 +257,7 @@ namespace VKEngine {
       return;
     
     Pipeline newPipeline;
-    if (build(pipeline->shaderInfos, newPipeline, false))
+    if (build(pipeline->shaderInfos, 0, newPipeline, false))
     {
       ResourceManager::destroy(name);
       _resources[name] = newPipeline;
@@ -252,7 +270,7 @@ namespace VKEngine {
     clean_loaded_shaders();
   }
  
-  Pipeline* Pipelines::create(const std::string& name, const std::vector<ShaderInfo>& shaderInfos)
+  Pipeline* Pipelines::create(const std::string& name, const std::vector<ShaderInfo>& shaderInfos, uint32_t pushConstantSize)
   {
     if (shaderInfos.size() == 0)
       return nullptr;
@@ -271,13 +289,13 @@ namespace VKEngine {
       });
     }
     Pipeline pipeline;
-    if (build(shaderInfos, pipeline))
+    if (build(shaderInfos, pushConstantSize, pipeline))
       return &(_resources[name] = pipeline);
     return nullptr;
   }
   
-  Pipeline* Pipelines::create(const std::string& name, const std::string& filename, const VertexInputDescription& description)
+  Pipeline* Pipelines::create(const std::string& name, const std::string& filename, const VertexInputDescription& description, uint32_t pushConstantSize)
   {
-    return create(name, filename_to_shaderdata(filename, description));
+    return create(name, filename_to_shaderdata(filename, description), pushConstantSize);
   }
 }

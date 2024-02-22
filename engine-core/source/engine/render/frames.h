@@ -29,7 +29,9 @@ namespace VKEngine {
   {
   public:
     void init(VkState* state, SwapchainHandler* swapchain, RenderPasses *passes);
-    void init() { init(_vkState, _swapchainHandler, _renderPasses); }
+    void init()
+      { init(_vkState, _swapchainHandler, _renderPasses); }
+    
     void destroy();
     
     FrameData& current();
@@ -41,7 +43,8 @@ namespace VKEngine {
     void start();
     void end();
     
-    void set_clear_value(VkClearColorValue clearValue) { _clearValue = clearValue; }
+    void set_clear_value(VkClearColorValue clearValue)
+      { _clearValue = clearValue; }
 
   private:
     VkState* _vkState;

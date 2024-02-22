@@ -43,6 +43,8 @@ namespace VKEngine {
   {
     _vkState.wait();
     
+    _gui.resize();
+    
     _frames.destroy();
     _renderPasses.destroy();
     _swapchainHandler.destroy();

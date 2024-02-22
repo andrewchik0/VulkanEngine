@@ -28,9 +28,7 @@ namespace VKEngine {
   {
   public:
     void init(Render* render)
-    {
-      _render = render;
-    }
+      { _render = render; }
     
     void destroy()
     {
@@ -55,7 +53,8 @@ namespace VKEngine {
       return nullptr;
     }
     
-    inline Val* operator[](const Key& key) { return get(key); }
+    inline Val* operator[](const Key& key)
+      { return get(key); }
 
   protected:
     static_assert(std::is_base_of<IResource, Val>::value, "Val must be derived from IResource");

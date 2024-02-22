@@ -142,9 +142,7 @@ namespace VKEngine {
     std::vector<glm::vec3> colors;
     
     uint32_t size()
-    {
-      return (uint32_t)pos_size();
-    }
+      { return (uint32_t)pos_size(); }
     
     VertexInputDescription build_vertex_desc()
     {
@@ -162,6 +160,20 @@ namespace VKEngine {
         builder.float3();
       
       return builder.build();
+    }
+    
+    void to2f()
+    {
+      for (auto& pos : positions3f)
+        positions2f.push_back(glm::vec2(pos.x, pos.y));
+      positions3f.clear();
+    }
+    
+    void to3f()
+    {
+      for (auto& pos : positions2f)
+        positions3f.push_back(glm::vec3(pos, 0));
+      positions2f.clear();
     }
     
     RawBuffer pack()

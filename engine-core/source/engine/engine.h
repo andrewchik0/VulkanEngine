@@ -22,16 +22,29 @@ namespace VKEngine {
     void draw();
     void run();
     
-    inline static Engine* get() { return s_instance; }
+    inline static Engine* get()
+      { return s_instance; }
     
-    inline Camera& camera() { return _camera; }
-    inline Window& window() { return *_window.get(); }
-    inline Render& render() { return _render; }
-    inline GUI& gui() { return _render._gui; }
+    inline Camera& camera()
+      { return _camera; }
     
-    inline Utils::TimeHandler& time() { return _timeHandler; }
-    inline Utils::FileWatchers& file_watchers() { return _fileWatchers; }
-    inline Utils::ThreadPool& thread_pool() { return _threadPool; }
+    inline Window& window() 
+      { return *_window.get(); }
+    
+    inline Render& render() 
+      { return _render; }
+    
+    inline GUI& gui()
+      { return _render._gui; }
+    
+    inline Utils::TimeHandler& time()
+      { return _timeHandler; }
+    
+    inline Utils::FileWatchers& file_watchers()
+      { return _fileWatchers; }
+    
+    inline Utils::ThreadPool& thread_pool()
+      { return _threadPool; }
 
   private:
     static Engine* s_instance;

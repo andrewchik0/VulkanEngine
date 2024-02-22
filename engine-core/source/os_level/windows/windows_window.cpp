@@ -133,6 +133,8 @@ namespace VKEngine {
           _hWnd = hWnd;
           return 0;
         case WM_SIZE:
+          _oldWindowExtent.width = _windowExtent.width;
+          _oldWindowExtent.height = _windowExtent.height;
           _windowExtent = { LOWORD(lParam), HIWORD(lParam) };
           _recreateFunction();
           return 0;

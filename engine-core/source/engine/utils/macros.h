@@ -6,6 +6,9 @@
 // Macro for getting last element of std::vector
 #define last_element(vector) ((vector)[(vector).size() - 1])
 
+// Get data of vector if it exists or get nullptr
+#define get_data_if_exists(vector) ((vector).size() == 0 ? nullptr : (vector).data())
+
 // Custom assertion
 #include <cassert>
 #include <iostream>

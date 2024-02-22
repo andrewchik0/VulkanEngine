@@ -10,6 +10,7 @@ namespace VKEngine {
   {
   public:
     void init();
+    void resize();
     
     void render(VkCommandBuffer cmd)
     {
@@ -21,8 +22,12 @@ namespace VKEngine {
         text.render(cmd);
     }
     
-    void image(const GUIImageCreateInfo& info) { _images.push_back(GUIImage(info)); }
-    void text(const GUITextCreateInfo& info) { _texts.push_back(GUIText(info)); }
+    void image(const GUIImageCreateInfo& info)
+      { _images.push_back(GUIImage(info)); }
+    
+    void text(const GUITextCreateInfo& info)
+      { _texts.push_back(GUIText(info)); }
+    
   private:
     std::vector<GUIImage> _images;
     std::vector<GUIText> _texts;

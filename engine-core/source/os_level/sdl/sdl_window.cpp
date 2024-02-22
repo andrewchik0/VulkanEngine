@@ -46,10 +46,15 @@ namespace VKEngine {
           {
             int32_t w, h;
             SDL_GetWindowSize(_window, &w, &h);
-            _windowExtent.width = w;
-            _windowExtent.height = h;
-
-            _recreateFunction();
+            if (_windowExtent.width != w || _windowExtent.height != h)
+            {
+              _oldWindowExtent.width = _windowExtent.width;
+              _oldWindowExtent.height = _windowExtent.height;
+              _windowExtent.width = w;
+              _windowExtent.height = h;
+              
+              _recreateFunction();
+            }
           }
           break;
         case SDL_KEYDOWN:

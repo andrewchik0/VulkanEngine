@@ -9,7 +9,9 @@ namespace VKEngine {
   public:
 
     void init(Engine* engine, uint32_t width, uint32_t height);
-    void init(uint32_t width, uint32_t height) { resize(width, height); }
+    void init(uint32_t width, uint32_t height)
+      { resize(width, height); }
+    
     void handle() override;
 
   private:
